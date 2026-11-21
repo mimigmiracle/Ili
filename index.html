@@ -36,6 +36,10 @@
         .gender-btn { flex: 1; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px; color: var(--text-muted); font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s; }
         .gender-btn.selected { background: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
 
+        .multi-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+        .multi-option-btn { background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px 10px; color: var(--text-main); font-size: 14px; font-weight: 700; text-align: center; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .multi-option-btn.selected { background: var(--accent-blue); color: #ffffff; border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
+
         .btn { width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 10px; }
         .btn:active { transform: scale(0.98); }
         .btn-secondary { background: #1e293b; border: 1px solid #334155; color: var(--text-muted); }
@@ -122,18 +126,8 @@
         </div>
         <div class="input-group">
             <label>Country</label>
-            <select id="regCountry">
+            <select id="regCountry" onchange="handleCountryChange()">
                 <option value="">-- Select Country --</option>
-                <option value="United States">United States</option>
-                <option value="Ghana">Ghana</option>
-                <option value="South Africa">South Africa</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="Nigeria">Nigeria</option>
-                <option value="Canada">Canada</option>
-                <option value="Kenya">Kenya</option>
-                <option value="Germany">Germany</option>
-                <option value="France">France</option>
-                <option value="Other">Other Countries Worldwide</option>
             </select>
         </div>
         <div class="input-group">
@@ -141,7 +135,7 @@
             <input type="text" id="regOccupation" placeholder="what you do for a living">
         </div>
         <div class="input-group">
-            <label>Monthly Income (₦)</label>
+            <label id="incomeLabel">Monthly Income ($)</label>
             <input type="text" id="regIncome" placeholder="how much do you make monthly" inputmode="numeric">
         </div>
         <div class="input-group">
@@ -156,11 +150,21 @@
     <!-- STEP 2: SERVICE REQUEST -->
     <div id="screenService" class="screen">
         <h2 style="font-size: 20px; margin-bottom: 4px;">Service Inquiry</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">What do you want us to do for you?</p>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">WHICH OF THIS DO YOU WANT MOSTLY?? (You can select one or multiple options)</p>
+
+        <div class="input-group">
+            <label>Select your priorities</label>
+            <div class="multi-select-grid" id="priorityOptions">
+                <div class="multi-option-btn" data-value="MONEY🔺" onclick="togglePriorityOption(this)">MONEY🔺</div>
+                <div class="multi-option-btn" data-value="FAME🔺" onclick="togglePriorityOption(this)">FAME🔺</div>
+                <div class="multi-option-btn" data-value="POWER🔺" onclick="togglePriorityOption(this)">POWER🔺</div>
+                <div class="multi-option-btn" data-value="PROTECTION🔺" onclick="togglePriorityOption(this)">PROTECTION🔺</div>
+            </div>
+        </div>
 
         <div class="input-group">
             <label>Describe your request</label>
-            <textarea id="serviceRequestText" rows="5" placeholder="Explain what you want us to offer you..."></textarea>
+            <textarea id="serviceRequestText" rows="4" placeholder="Explain what you want us to offer you..."></textarea>
         </div>
 
         <p id="serviceError" class="error-text" style="margin-bottom: 10px;"></p>
@@ -209,7 +213,7 @@
         <div class="dash-header">
             <div>
                 <h3 style="font-size: 18px;">Vault Dashboard</h3>
-                <p style="font-size: 12px; color: var(--text-muted);">Active Node: #NG-8894</p>
+                <p style="font-size: 12px; color: var(--text-muted);" id="activeNodeLabel">Active Node: #NG-8894</p>
             </div>
             <div class="user-badge" id="dashUserBadge">ID: User</div>
         </div>
@@ -219,7 +223,7 @@
         <!-- WELCOME BONUS CARD -->
         <div id="welcomeBonusBox" class="bonus-card">
             <div style="font-size: 13px; color: #10b981; font-weight: bold; text-transform: uppercase;">🎁 Welcome Bonus Unlocked</div>
-            <div class="bonus-amount">$4,072.00</div>
+            <div class="bonus-amount" id="bonusDisplay">$4,072.00</div>
             <button class="btn btn-success" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
         </div>
 
@@ -250,16 +254,13 @@
         <div class="id-modal-content">
             <div style="font-size: 32px; margin-bottom: 6px;">ℹ️</div>
             <h3 style="font-size: 18px; margin-bottom: 8px;">Clearance Required</h3>
-            <p style="color: var(--text-muted); font-size: 12px;">Please contact the supreme leader that gave you this link to get your membership ID and your other items:</p>
+            <p style="color: var(--text-muted); font-size: 12px;">Please meet your supreme leader to request for your membership ID.</p>
             
             <div class="admin-req-list">
-                1. Membership registration ID Number that you can use to withdraw your money<br>
-                2. Illuminati uniform<br>
-                3. The Illuminati ring 💍<br>
-                4. Protection oil rub it first of every year. (this will protect you against the devil curse, it will protect you from the god of death because after taken the oath your soul now belongs to the devil)
+                1. Membership ID
             </div>
 
-            <p style="font-size: 12px; color: var(--accent-blue); margin-bottom: 16px;">If you already have taken all these details from your supreme leader, you can click on the proceed button below to proceed.</p>
+            <p style="font-size: 12px; color: var(--accent-blue); margin-bottom: 16px;">If you already have your membership ID from your supreme leader, click proceed below.</p>
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-secondary" onclick="closeAdminNoticeModal()">Cancel</button>
@@ -331,7 +332,7 @@
             </div>
 
             <div class="input-group">
-                <label>Withdrawal Amount ($)</label>
+                <label id="withdrawAmountLabel">Withdrawal Amount ($)</label>
                 <input type="text" id="withdrawAmountInput" inputmode="numeric">
             </div>
 
@@ -344,20 +345,248 @@
 </div>
 
 <script>
-    const STORAGE_KEY_STEP = "vault_registration_step_v5";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v5";
-    const STORAGE_KEY_BALANCE = "vault_balance_v5";
-    const STORAGE_KEY_TIME = "vault_last_time_v5";
+    const STORAGE_KEY_STEP = "vault_registration_step_v6";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v6";
+    const STORAGE_KEY_BALANCE_USD = "vault_balance_usd_v6";
+    const STORAGE_KEY_TIME = "vault_last_time_v6";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v6";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v6";
 
-    const BASE_BALANCE = 12700.00;
-    const BONUS_AMOUNT = 4072.00;
-    const INCREMENT_PER_SEC = 66.33;
+    const BASE_BALANCE_USD = 12700.00;
+    const BONUS_AMOUNT_USD = 4072.00;
+    const INCREMENT_PER_SEC_USD = 66.33;
 
-    let currentBalance = BASE_BALANCE;
+    // Country list with currency symbol & rate relative to 1 USD
+    const COUNTRIES_DATA = [
+        { name: "Afghanistan", symbol: "؋", rate: 71 },
+        { name: "Albania", symbol: "L", rate: 95 },
+        { name: "Algeria", symbol: "د.ج", rate: 134 },
+        { name: "Andorra", symbol: "€", rate: 0.92 },
+        { name: "Angola", symbol: "Kz", rate: 915 },
+        { name: "Antigua and Barbuda", symbol: "$", rate: 1 },
+        { name: "Argentina", symbol: "$", rate: 1000 },
+        { name: "Armenia", symbol: "֏", rate: 388 },
+        { name: "Australia", symbol: "A$", rate: 1.53 },
+        { name: "Austria", symbol: "€", rate: 0.92 },
+        { name: "Azerbaijan", symbol: "₼", rate: 1.7 },
+        { name: "Bahamas", symbol: "$", rate: 1 },
+        { name: "Bahrain", symbol: ".د.ب", rate: 0.376 },
+        { name: "Bangladesh", symbol: "৳", rate: 119 },
+        { name: "Barbados", symbol: "$", rate: 1 },
+        { name: "Belarus", symbol: "Br", rate: 3.28 },
+        { name: "Belgium", symbol: "€", rate: 0.92 },
+        { name: "Belize", symbol: "BZ$", rate: 2 },
+        { name: "Benin", symbol: "CFA", rate: 605 },
+        { name: "Bhutan", symbol: "Nu.", rate: 84 },
+        { name: "Bolivia", symbol: "Bs.", rate: 6.91 },
+        { name: "Bosnia and Herzegovina", symbol: "KM", rate: 1.8 },
+        { name: "Botswana", symbol: "P", rate: 13.6 },
+        { name: "Brazil", symbol: "R$", rate: 5.75 },
+        { name: "Brunei", symbol: "B$", rate: 1.34 },
+        { name: "Bulgaria", symbol: "лв", rate: 1.8 },
+        { name: "Burkina Faso", symbol: "CFA", rate: 605 },
+        { name: "Burundi", symbol: "FBu", rate: 2900 },
+        { name: "Cabo Verde", symbol: "$", rate: 101 },
+        { name: "Cambodia", symbol: "៛", rate: 4070 },
+        { name: "Cameroon", symbol: "FCFA", rate: 605 },
+        { name: "Canada", symbol: "C$", rate: 1.39 },
+        { name: "Central African Republic", symbol: "FCFA", rate: 605 },
+        { name: "Chad", symbol: "FCFA", rate: 605 },
+        { name: "Chile", symbol: "$", rate: 960 },
+        { name: "China", symbol: "¥", rate: 7.24 },
+        { name: "Colombia", symbol: "$", rate: 4350 },
+        { name: "Comoros", symbol: "CF", rate: 453 },
+        { name: "Congo (Congo-Brazzaville)", symbol: "FCFA", rate: 605 },
+        { name: "Costa Rica", symbol: "₡", rate: 512 },
+        { name: "Côte d'Ivoire", symbol: "CFA", rate: 605 },
+        { name: "Croatia", symbol: "€", rate: 0.92 },
+        { name: "Cuba", symbol: "$", rate: 24 },
+        { name: "Cyprus", symbol: "€", rate: 0.92 },
+        { name: "Czechia", symbol: "Kč", rate: 23.4 },
+        { name: "Democratic Republic of the Congo", symbol: "FC", rate: 2850 },
+        { name: "Denmark", symbol: "kr", rate: 6.88 },
+        { name: "Djibouti", symbol: "Fdj", rate: 178 },
+        { name: "Dominica", symbol: "$", rate: 1 },
+        { name: "Dominican Republic", symbol: "RD$", rate: 60 },
+        { name: "Ecuador", symbol: "$", rate: 1 },
+        { name: "Egypt", symbol: "E£", rate: 49.3 },
+        { name: "El Salvador", symbol: "$", rate: 1 },
+        { name: "Equatorial Guinea", symbol: "FCFA", rate: 605 },
+        { name: "Eritrea", symbol: "Nfk", rate: 15 },
+        { name: "Estonia", symbol: "€", rate: 0.92 },
+        { name: "Eswatini", symbol: "E", rate: 18 },
+        { name: "Ethiopia", symbol: "Br", rate: 120 },
+        { name: "Fiji", symbol: "FJ$", rate: 2.26 },
+        { name: "Finland", symbol: "€", rate: 0.92 },
+        { name: "France", symbol: "€", rate: 0.92 },
+        { name: "Gabon", symbol: "FCFA", rate: 605 },
+        { name: "Gambia", symbol: "D", rate: 70 },
+        { name: "Georgia", symbol: "₾", rate: 2.73 },
+        { name: "Germany", symbol: "€", rate: 0.92 },
+        { name: "Ghana", symbol: "₵", rate: 16.5 },
+        { name: "Greece", symbol: "€", rate: 0.92 },
+        { name: "Grenada", symbol: "$", rate: 1 },
+        { name: "Guatemala", symbol: "Q", rate: 7.75 },
+        { name: "Guinea", symbol: "FG", rate: 8600 },
+        { name: "Guinea-Bissau", symbol: "CFA", rate: 605 },
+        { name: "Guyana", symbol: "G$", rate: 209 },
+        { name: "Haiti", symbol: "G", rate: 132 },
+        { name: "Honduras", symbol: "L", rate: 25 },
+        { name: "Hungary", symbol: "Ft", rate: 376 },
+        { name: "Iceland", symbol: "kr", rate: 138 },
+        { name: "India", symbol: "₹", rate: 84.4 },
+        { name: "Indonesia", symbol: "Rp", rate: 15850 },
+        { name: "Iran", symbol: "﷼", rate: 42000 },
+        { name: "Iraq", symbol: "ع.د", rate: 1310 },
+        { name: "Ireland", symbol: "€", rate: 0.92 },
+        { name: "Israel", symbol: "₪", rate: 3.72 },
+        { name: "Italy", symbol: "€", rate: 0.92 },
+        { name: "Jamaica", symbol: "J$", rate: 157 },
+        { name: "Japan", symbol: "¥", rate: 154 },
+        { name: "Jordan", symbol: "JD", rate: 0.709 },
+        { name: "Kazakhstan", symbol: "₸", rate: 495 },
+        { name: "Kenya", symbol: "KSh", rate: 129 },
+        { name: "Kiribati", symbol: "A$", rate: 1.53 },
+        { name: "Kuwait", symbol: "KD", rate: 0.307 },
+        { name: "Kyrgyzstan", symbol: "с", rate: 86 },
+        { name: "Laos", symbol: "₭", rate: 21900 },
+        { name: "Latvia", symbol: "€", rate: 0.92 },
+        { name: "Lebanon", symbol: "L£", rate: 89500 },
+        { name: "Lesotho", symbol: "L", rate: 18 },
+        { name: "Liberia", symbol: "L$", rate: 190 },
+        { name: "Libya", symbol: "LD", rate: 4.85 },
+        { name: "Liechtenstein", symbol: "CHF", rate: 0.88 },
+        { name: "Lithuania", symbol: "€", rate: 0.92 },
+        { name: "Luxembourg", symbol: "€", rate: 0.92 },
+        { name: "Madagascar", symbol: "Ar", rate: 4600 },
+        { name: "Malawi", symbol: "MK", rate: 1730 },
+        { name: "Malaysia", symbol: "RM", rate: 4.47 },
+        { name: "Maldives", symbol: "Rf", rate: 15.4 },
+        { name: "Mali", symbol: "CFA", rate: 605 },
+        { name: "Malta", symbol: "€", rate: 0.92 },
+        { name: "Marshall Islands", symbol: "$", rate: 1 },
+        { name: "Mauritania", symbol: "UM", rate: 39.7 },
+        { name: "Mauritius", symbol: "₨", rate: 46.5 },
+        { name: "Mexico", symbol: "$", rate: 20.3 },
+        { name: "Micronesia", symbol: "$", rate: 1 },
+        { name: "Moldova", symbol: "L", rate: 18 },
+        { name: "Monaco", symbol: "€", rate: 0.92 },
+        { name: "Mongolia", symbol: "₮", rate: 3420 },
+        { name: "Montenegro", symbol: "€", rate: 0.92 },
+        { name: "Morocco", symbol: "MAD", rate: 9.95 },
+        { name: "Mozambique", symbol: "MT", rate: 63.8 },
+        { name: "Myanmar", symbol: "Ks", rate: 2100 },
+        { name: "Namibia", symbol: "N$", rate: 18 },
+        { name: "Nauru", symbol: "A$", rate: 1.53 },
+        { name: "Nepal", symbol: "रू", rate: 135 },
+        { name: "Netherlands", symbol: "€", rate: 0.92 },
+        { name: "New Zealand", symbol: "NZ$", rate: 1.69 },
+        { name: "Nicaragua", symbol: "C$", rate: 36.8 },
+        { name: "Niger", symbol: "CFA", rate: 605 },
+        { name: "Nigeria", symbol: "₦", rate: 1650 },
+        { name: "North Korea", symbol: "₩", rate: 900 },
+        { name: "North Macedonia", symbol: "ден", rate: 56.5 },
+        { name: "Norway", symbol: "kr", rate: 11.1 },
+        { name: "Oman", symbol: "﷼", rate: 0.385 },
+        { name: "Pakistan", symbol: "₨", rate: 278 },
+        { name: "Palau", symbol: "$", rate: 1 },
+        { name: "Palestine State", symbol: "₪", rate: 3.72 },
+        { name: "Panama", symbol: "B/.", rate: 1 },
+        { name: "Papua New Guinea", symbol: "K", rate: 3.95 },
+        { name: "Paraguay", symbol: "₲", rate: 7850 },
+        { name: "Peru", symbol: "S/", rate: 3.78 },
+        { name: "Philippines", symbol: "₱", rate: 58.8 },
+        { name: "Poland", symbol: "zł", rate: 4.08 },
+        { name: "Portugal", symbol: "€", rate: 0.92 },
+        { name: "Qatar", symbol: "﷼", rate: 3.64 },
+        { name: "Romania", symbol: "lei", rate: 4.58 },
+        { name: "Russia", symbol: "₽", rate: 100 },
+        { name: "Rwanda", symbol: "FRw", rate: 1375 },
+        { name: "Saint Kitts and Nevis", symbol: "$", rate: 1 },
+        { name: "Saint Lucia", symbol: "$", rate: 1 },
+        { name: "Saint Vincent and the Grenadines", symbol: "$", rate: 1 },
+        { name: "Samoa", symbol: "T", rate: 2.75 },
+        { name: "San Marino", symbol: "€", rate: 0.92 },
+        { name: "Sao Tome and Principe", symbol: "Db", rate: 22.5 },
+        { name: "Saudi Arabia", symbol: "﷼", rate: 3.75 },
+        { name: "Senegal", symbol: "CFA", rate: 605 },
+        { name: "Serbia", symbol: "дин.", rate: 108 },
+        { name: "Seychelles", symbol: "₨", rate: 13.8 },
+        { name: "Sierra Leone", symbol: "Le", rate: 22.7 },
+        { name: "Singapore", symbol: "S$", rate: 1.34 },
+        { name: "Slovakia", symbol: "€", rate: 0.92 },
+        { name: "Slovenia", symbol: "€", rate: 0.92 },
+        { name: "Solomon Islands", symbol: "SI$", rate: 8.35 },
+        { name: "Somalia", symbol: "Sh", rate: 570 },
+        { name: "South Africa", symbol: "R", rate: 18 },
+        { name: "South Korea", symbol: "₩", rate: 1395 },
+        { name: "South Sudan", symbol: "SSP", rate: 3400 },
+        { name: "Spain", symbol: "€", rate: 0.92 },
+        { name: "Sri Lanka", symbol: "Rs", rate: 291 },
+        { name: "Sudan", symbol: "ج.س.", rate: 601 },
+        { name: "Suriname", symbol: "$", rate: 35 },
+        { name: "Sweden", symbol: "kr", rate: 10.9 },
+        { name: "Switzerland", symbol: "CHF", rate: 0.88 },
+        { name: "Syria", symbol: "£S", rate: 13000 },
+        { name: "Tajikistan", symbol: "SM", rate: 10.9 },
+        { name: "Tanzania", symbol: "TSh", rate: 2680 },
+        { name: "Thailand", symbol: "฿", rate: 34.5 },
+        { name: "Timor-Leste", symbol: "$", rate: 1 },
+        { name: "Togo", symbol: "CFA", rate: 605 },
+        { name: "Tonga", symbol: "T$", rate: 2.38 },
+        { name: "Trinidad and Tobago", symbol: "TT$", rate: 6.78 },
+        { name: "Tunisia", symbol: "DT", rate: 3.12 },
+        { name: "Turkey", symbol: "₺", rate: 34.5 },
+        { name: "Turkmenistan", symbol: "m", rate: 3.5 },
+        { name: "Tuvalu", symbol: "A$", rate: 1.53 },
+        { name: "Uganda", symbol: "USh", rate: 3670 },
+        { name: "Ukraine", symbol: "₴", rate: 41.3 },
+        { name: "United Arab Emirates", symbol: "د.إ", rate: 3.6725 },
+        { name: "United Kingdom", symbol: "£", rate: 0.79 },
+        { name: "United States", symbol: "$", rate: 1 },
+        { name: "Uruguay", symbol: "$U", rate: 42.5 },
+        { name: "Uzbekistan", symbol: "so'm", rate: 12800 },
+        { name: "Vanuatu", symbol: "VT", rate: 120 },
+        { name: "Vatican City", symbol: "€", rate: 0.92 },
+        { name: "Venezuela", symbol: "Bs.", rate: 46 },
+        { name: "Vietnam", symbol: "₫", rate: 25400 },
+        { name: "Yemen", symbol: "﷼", rate: 250 },
+        { name: "Zambia", symbol: "ZK", rate: 27.2 },
+        { name: "Zimbabwe", symbol: "$", rate: 25 }
+    ];
+
+    let currentBalanceUsd = BASE_BALANCE_USD;
     let tickerInterval = null;
     let pictureUploaded = false;
+    let selectedPriorities = [];
 
-    // Populate Age Scroll Options (18 to 100)
+    function getCountryConfig(countryName) {
+        return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1 };
+    }
+
+    function formatInCountryCurrency(usdAmount, countryName) {
+        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
+        const converted = usdAmount * cfg.rate;
+        return cfg.symbol + converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function updateCurrencyLabels() {
+        const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+        const cfg = getCountryConfig(countryName);
+        document.getElementById('incomeLabel').innerText = `Monthly Income (${cfg.symbol})`;
+        document.getElementById('withdrawAmountLabel').innerText = `Withdrawal Amount (${cfg.symbol})`;
+        document.getElementById('bonusDisplay').innerText = formatInCountryCurrency(BONUS_AMOUNT_USD, countryName);
+        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
+    }
+
+    function handleCountryChange() {
+        const countryName = document.getElementById('regCountry').value;
+        if (countryName) {
+            localStorage.setItem(STORAGE_KEY_COUNTRY, countryName);
+        }
+        updateCurrencyLabels();
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         const ageSelect = document.getElementById('regAge');
         for (let i = 18; i <= 100; i++) {
@@ -366,7 +595,35 @@
             opt.textContent = i;
             ageSelect.appendChild(opt);
         }
-        
+
+        const countrySelect = document.getElementById('regCountry');
+        COUNTRIES_DATA.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.name;
+            opt.textContent = c.name;
+            countrySelect.appendChild(opt);
+        });
+
+        const savedCountry = localStorage.getItem(STORAGE_KEY_COUNTRY);
+        if (savedCountry) {
+            countrySelect.value = savedCountry;
+        }
+
+        try {
+            const savedPriorities = JSON.parse(localStorage.getItem(STORAGE_KEY_PRIORITIES) || '[]');
+            if (Array.isArray(savedPriorities)) {
+                selectedPriorities = savedPriorities;
+                document.querySelectorAll('#priorityOptions .multi-option-btn').forEach(btn => {
+                    if (selectedPriorities.includes(btn.dataset.value)) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+        } catch (e) {
+            selectedPriorities = [];
+        }
+
+        updateCurrencyLabels();
         restoreUserStep();
     });
 
@@ -382,6 +639,7 @@
             document.getElementById('dashScreen').classList.add('active');
             const savedName = localStorage.getItem('user_profile_name') || 'User';
             document.getElementById('dashUserBadge').innerText = "ID: " + savedName;
+            updateCurrencyLabels();
             checkBonusState();
             calculateStoredBalance();
             startTicker();
@@ -402,6 +660,17 @@
         if(gender === 'Female') document.getElementById('genderFemale').classList.add('selected');
     }
 
+    function togglePriorityOption(el) {
+        const val = el.dataset.value;
+        el.classList.toggle('selected');
+        if (selectedPriorities.includes(val)) {
+            selectedPriorities = selectedPriorities.filter(item => item !== val);
+        } else {
+            selectedPriorities.push(val);
+        }
+        localStorage.setItem(STORAGE_KEY_PRIORITIES, JSON.stringify(selectedPriorities));
+    }
+
     function submitRegistration() {
         const name = document.getElementById('regName').value.trim();
         const age = document.getElementById('regAge').value;
@@ -419,17 +688,25 @@
         }
 
         localStorage.setItem('user_profile_name', name);
+        localStorage.setItem(STORAGE_KEY_COUNTRY, country);
+        updateCurrencyLabels();
         setScreenStep('service');
     }
 
     function submitServiceRequest() {
         const req = document.getElementById('serviceRequestText').value.trim();
         const err = document.getElementById('serviceError');
+        if(selectedPriorities.length === 0) {
+            err.innerText = "Please select at least one option from WHICH OF THIS DO YOU WANT MOSTLY??";
+            err.style.display = 'block';
+            return;
+        }
         if(!req) {
             err.innerText = "Please describe what you want us to offer you.";
             err.style.display = 'block';
             return;
         }
+        err.style.display = 'none';
         setScreenStep('rules');
     }
 
@@ -480,41 +757,43 @@
     function claimWelcomeBonus() {
         const bonusClaimed = localStorage.getItem(STORAGE_KEY_BONUS_CLAIMED);
         if(bonusClaimed !== 'true') {
-            currentBalance += BONUS_AMOUNT;
+            currentBalanceUsd += BONUS_AMOUNT_USD;
             localStorage.setItem(STORAGE_KEY_BONUS_CLAIMED, 'true');
             saveBalanceState();
             document.getElementById('welcomeBonusBox').style.display = 'none';
-            document.getElementById('balanceDisplay').innerText = '₦' + currentBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
         }
     }
 
     // Ticker & Balance Logic
     function calculateStoredBalance() {
-        const savedBal = localStorage.getItem(STORAGE_KEY_BALANCE);
+        const savedBal = localStorage.getItem(STORAGE_KEY_BALANCE_USD);
         const savedTime = localStorage.getItem(STORAGE_KEY_TIME);
         
         if(savedBal && savedTime) {
             const elapsed = (Date.now() - parseInt(savedTime)) / 1000;
             if(elapsed > 0) {
-                currentBalance = parseFloat(savedBal) + (elapsed * INCREMENT_PER_SEC);
+                currentBalanceUsd = parseFloat(savedBal) + (elapsed * INCREMENT_PER_SEC_USD);
             } else {
-                currentBalance = parseFloat(savedBal);
+                currentBalanceUsd = parseFloat(savedBal);
             }
         } else {
-            currentBalance = BASE_BALANCE;
+            currentBalanceUsd = BASE_BALANCE_USD;
         }
     }
 
     function saveBalanceState() {
-        localStorage.setItem(STORAGE_KEY_BALANCE, currentBalance);
+        localStorage.setItem(STORAGE_KEY_BALANCE_USD, currentBalanceUsd);
         localStorage.setItem(STORAGE_KEY_TIME, Date.now());
     }
 
     function startTicker() {
         if(tickerInterval) clearInterval(tickerInterval);
         tickerInterval = setInterval(() => {
-            currentBalance += INCREMENT_PER_SEC;
-            document.getElementById('balanceDisplay').innerText = '₦' + currentBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            currentBalanceUsd += INCREMENT_PER_SEC_USD;
+            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
             saveBalanceState();
         }, 1000);
     }
@@ -554,6 +833,7 @@
     }
 
     function openWithdrawPayoutModal() {
+        updateCurrencyLabels();
         document.getElementById('withdrawModal').classList.add('active');
         document.getElementById('withdrawSuccessBox').style.display = 'none';
         document.getElementById('withdrawError').style.display = 'none';
@@ -567,7 +847,7 @@
         const bank = document.getElementById('bankSelect').value;
         const accNum = document.getElementById('accountNumberInput').value.trim();
         const accName = document.getElementById('accountNameInput').value.trim();
-        const amount = parseFloat(document.getElementById('withdrawAmountInput').value);
+        const enteredAmount = parseFloat(document.getElementById('withdrawAmountInput').value);
         const errBox = document.getElementById('withdrawError');
         const successBox = document.getElementById('withdrawSuccessBox');
 
@@ -579,14 +859,19 @@
             return;
         }
 
-        if(!amount || isNaN(amount) || amount <= 0 || amount > currentBalance) {
+        const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+        const cfg = getCountryConfig(countryName);
+        const amountInUsd = enteredAmount / cfg.rate;
+
+        if(!enteredAmount || isNaN(enteredAmount) || enteredAmount <= 0 || amountInUsd > currentBalanceUsd) {
             errBox.innerText = "Invalid withdrawal amount or insufficient funds.";
             errBox.style.display = 'block';
             return;
         }
 
-        currentBalance -= amount;
+        currentBalanceUsd -= amountInUsd;
         saveBalanceState();
+        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
         successBox.style.display = 'block';
         setTimeout(() => { closeWithdrawModal(); }, 3000);
     }
