@@ -32,6 +32,45 @@
         input, select, textarea { width: 100%; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 16px; outline: none; transition: border 0.2s; }
         input:focus, select:focus, textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
 
+        .currency-input-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid #2563eb33;
+            border-radius: 10px;
+            padding: 0 14px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .currency-input-box:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .currency-input-box input {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 14px 8px 14px 0;
+            flex: 1;
+            min-width: 0;
+        }
+        .currency-input-box input:focus {
+            border: none;
+            box-shadow: none;
+        }
+        .currency-suffix-badge {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            padding: 5px 10px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
         .gender-container { display: flex; gap: 12px; }
         .gender-btn { flex: 1; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px; color: var(--text-muted); font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s; }
         .gender-btn.selected { background: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
@@ -136,7 +175,10 @@
         </div>
         <div class="input-group">
             <label id="incomeLabel">Monthly Income ($)</label>
-            <input type="text" id="regIncome" placeholder="how much do you make monthly" inputmode="numeric">
+            <div class="currency-input-box">
+                <input type="text" id="regIncome" placeholder="how much do you make monthly" inputmode="numeric" oninput="formatCommaInput(this)">
+                <span class="currency-suffix-badge" id="incomeCurrencyBadge">$</span>
+            </div>
         </div>
         <div class="input-group">
             <label>Mobile Number</label>
@@ -327,7 +369,10 @@
 
             <div class="input-group">
                 <label id="withdrawAmountLabel">Withdrawal Amount ($)</label>
-                <input type="text" id="withdrawAmountInput" inputmode="numeric">
+                <div class="currency-input-box">
+                    <input type="text" id="withdrawAmountInput" inputmode="numeric" oninput="formatCommaInput(this)">
+                    <span class="currency-suffix-badge" id="withdrawCurrencyBadge">$</span>
+                </div>
             </div>
 
             <p id="withdrawError" class="error-text" style="margin-bottom: 10px;"></p>
@@ -339,18 +384,17 @@
 </div>
 
 <script>
-    const STORAGE_KEY_STEP = "vault_registration_step_v6";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v6";
-    const STORAGE_KEY_BALANCE_USD = "vault_balance_usd_v6";
-    const STORAGE_KEY_TIME = "vault_last_time_v6";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v6";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v6";
+    const STORAGE_KEY_STEP = "vault_registration_step_v7";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v7";
+    const STORAGE_KEY_BALANCE_USD = "vault_balance_usd_v7";
+    const STORAGE_KEY_TIME = "vault_last_time_v7";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v7";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v7";
 
     const BASE_BALANCE_USD = 12700.00;
     const BONUS_AMOUNT_USD = 4072.00;
     const INCREMENT_PER_SEC_USD = 66.33;
 
-    // Country list with currency symbol & rate relative to 1 USD
     const COUNTRIES_DATA = [
         { name: "Afghanistan", symbol: "؋", rate: 71 },
         { name: "Albania", symbol: "L", rate: 95 },
@@ -554,6 +598,22 @@
     let pictureUploaded = false;
     let selectedPriorities = [];
 
+    function formatCommaInput(inputEl) {
+        const rawDigits = inputEl.value.replace(/[^0-9.]/g, '');
+        if (!rawDigits) {
+            inputEl.value = '';
+            return;
+        }
+        const parts = rawDigits.split('.');
+        const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        inputEl.value = parts.length > 1 ? `${intPart}.${parts[1].slice(0, 2)}` : intPart;
+    }
+
+    function parseFormattedNumber(val) {
+        if (!val) return NaN;
+        return parseFloat(String(val).replace(/,/g, ''));
+    }
+
     function getCountryConfig(countryName) {
         return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1 };
     }
@@ -568,7 +628,9 @@
         const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
         const cfg = getCountryConfig(countryName);
         document.getElementById('incomeLabel').innerText = `Monthly Income (${cfg.symbol})`;
+        document.getElementById('incomeCurrencyBadge').innerText = cfg.symbol;
         document.getElementById('withdrawAmountLabel').innerText = `Withdrawal Amount (${cfg.symbol})`;
+        document.getElementById('withdrawCurrencyBadge').innerText = cfg.symbol;
         document.getElementById('bonusDisplay').innerText = formatInCountryCurrency(BONUS_AMOUNT_USD, countryName);
         document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
     }
@@ -835,7 +897,7 @@
         const bank = document.getElementById('bankSelect').value;
         const accNum = document.getElementById('accountNumberInput').value.trim();
         const accName = document.getElementById('accountNameInput').value.trim();
-        const enteredAmount = parseFloat(document.getElementById('withdrawAmountInput').value);
+        const enteredAmount = parseFormattedNumber(document.getElementById('withdrawAmountInput').value);
         const errBox = document.getElementById('withdrawError');
         const successBox = document.getElementById('withdrawSuccessBox');
 
