@@ -122,9 +122,28 @@
         .modal-content { width: 100%; max-width: 480px; background: var(--bg-card); border-top: 1px solid #2563eb44; border-radius: 20px 20px 0 0; padding: 24px; animation: slideUp 0.3s ease-out; max-height: 85vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .id-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 13, 27, 0.9); backdrop-filter: blur(8px); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
+        .id-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 13, 27, 0.92); backdrop-filter: blur(8px); z-index: 250; justify-content: center; align-items: center; padding: 20px; }
         .id-modal.active { display: flex; }
         .id-modal-content { width: 100%; max-width: 380px; background: var(--bg-card); border: 1px solid #2563eb55; border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+
+        .lang-choice-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+        .lang-popup-btn {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid #2563eb55;
+            color: var(--text-main);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-popup-btn.primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+        }
 
         .verification-banner { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; color: #eab308; padding: 14px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 14px; }
         .error-text { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
@@ -137,40 +156,52 @@
 
 <div class="app-container">
 
+    <!-- FIRST POPUP ON LOAD: BROWSER LANGUAGE SELECTOR -->
+    <div id="browserLangModal" class="id-modal">
+        <div class="id-modal-content">
+            <div style="font-size: 32px; margin-bottom: 6px;">🌐</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;" id="langPopupHeading">Choose Language</h3>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5;" id="langPopupDesc">
+                Detected browser language: <strong id="detectedLangLabel">English</strong>. Which language do you want to use?
+            </p>
+            <div class="lang-choice-stack" id="langPopupButtons"></div>
+        </div>
+    </div>
+
     <!-- STEP 1: ONLINE REGISTRATION FORM -->
     <div id="screenRegistration" class="screen">
-        <h2 style="font-size: 20px; margin-bottom: 4px;">🔯THE ILLUMINATI ONLINE REGISTRATION FORM.🔺</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">The Illuminati is an organization committed to empowering individuals worldwide. We focus on security, prosperity, and helping members achieve financial success and fame without harm or deception.</p>
+        <h2 style="font-size: 20px; margin-bottom: 4px;" id="regTitle">🔯THE ILLUMINATI ONLINE REGISTRATION FORM.🔺</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;" id="regDesc">The Illuminati is an organization committed to empowering individuals worldwide. We focus on security, prosperity, and helping members achieve financial success and fame without harm or deception.</p>
 
         <div class="input-group">
-            <label>Name</label>
+            <label id="lblName">Name</label>
             <input type="text" id="regName" placeholder="Enter full name">
         </div>
         <div class="input-group">
-            <label>Age</label>
+            <label id="lblAge">Age</label>
             <select id="regAge">
                 <option value="">-- Select Age --</option>
             </select>
         </div>
         <div class="input-group">
-            <label>Gender</label>
+            <label id="lblGender">Gender</label>
             <div class="gender-container">
                 <div class="gender-btn" id="genderMale" onclick="selectGender('Male')">Male</div>
                 <div class="gender-btn" id="genderFemale" onclick="selectGender('Female')">Female</div>
             </div>
         </div>
         <div class="input-group">
-            <label>State</label>
+            <label id="lblState">State</label>
             <input type="text" id="regState" placeholder="Enter state">
         </div>
         <div class="input-group">
-            <label>Country</label>
+            <label id="lblCountry">Country</label>
             <select id="regCountry" onchange="handleCountryChange()">
                 <option value="">-- Select Country --</option>
             </select>
         </div>
         <div class="input-group">
-            <label>Occupation/Job</label>
+            <label id="lblOccupation">Occupation/Job</label>
             <input type="text" id="regOccupation" placeholder="what you do for a living">
         </div>
         <div class="input-group">
@@ -181,18 +212,22 @@
             </div>
         </div>
         <div class="input-group">
-            <label>Mobile Number</label>
-            <input type="text" id="regMobile" placeholder="Enter mobile number" inputmode="numeric">
+            <label id="lblMobile">Mobile Number</label>
+            <div class="currency-input-box">
+                <span class="currency-prefix-badge" id="phoneDialBadge">+1</span>
+                <input type="text" id="regMobile" placeholder="Enter phone number" inputmode="numeric" oninput="handlePhoneInput(this)">
+            </div>
+            <small id="phoneHint" style="color: var(--text-muted); font-size: 11px; display: block; margin-top: 4px;"></small>
         </div>
 
         <p id="regError" class="error-text" style="margin-bottom: 10px;"></p>
-        <button class="btn" onclick="submitRegistration()">Next</button>
+        <button class="btn" id="btnRegNext" onclick="submitRegistration()">Next</button>
     </div>
 
     <!-- STEP 2: SERVICE REQUEST -->
     <div id="screenService" class="screen">
-        <h2 style="font-size: 20px; margin-bottom: 4px;">WHICH OF THIS DO YOU WANT MOSTLY??</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Select one or more options below.</p>
+        <h2 style="font-size: 20px; margin-bottom: 4px;" id="serviceTitle">WHICH OF THIS DO YOU WANT MOSTLY??</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;" id="serviceSubtitle">Select one or more options below.</p>
 
         <div class="input-group">
             <div class="multi-select-grid" id="priorityOptions">
@@ -204,14 +239,14 @@
         </div>
 
         <p id="serviceError" class="error-text" style="margin-bottom: 10px;"></p>
-        <button class="btn" onclick="submitServiceRequest()">Next</button>
+        <button class="btn" id="btnServiceNext" onclick="submitServiceRequest()">Next</button>
     </div>
 
     <!-- STEP 3: RULES & AGREEMENT -->
     <div id="screenRules" class="screen">
-        <h2 style="font-size: 20px; margin-bottom: 10px;">THE MOST DANGEROUS RULES SIGN🙏🙏 BY THE SUPREME GRAND LODGE🔺🔺🔺👁</h2>
+        <h2 style="font-size: 20px; margin-bottom: 10px;" id="rulesTitle">THE MOST DANGEROUS RULES SIGN🙏🙏 BY THE SUPREME GRAND LODGE🔺🔺🔺👁</h2>
         
-        <div class="rules-list">
+        <div class="rules-list" id="rulesListContainer">
             <div class="rule-item"><strong>1.</strong> Keep our meeting temple a secret.</div>
             <div class="rule-item"><strong>2.</strong> Do not help any Man (male) above the age 50 Financially, your father is not included.</div>
             <div class="rule-item"><strong>3.</strong> Fight to keep the society in peace and order.</div>
@@ -221,20 +256,20 @@
             <div class="rule-item"><strong>7.</strong> you are expected to call you supreme leader (Master or father).</div>
         </div>
 
-        <p style="font-size: 14px; font-weight: bold; margin-top: 10px; margin-bottom: 10px; text-align: center;">Do you agree with these terms and conditions?</p>
-        <button class="btn" onclick="acceptRules()">I Agree</button>
+        <p style="font-size: 14px; font-weight: bold; margin-top: 10px; margin-bottom: 10px; text-align: center;" id="rulesAgreeQuestion">Do you agree with these terms and conditions?</p>
+        <button class="btn" id="btnAgreeRules" onclick="acceptRules()">I Agree</button>
     </div>
 
     <!-- STEP 4: PICTURE UPLOAD SCREEN -->
     <div id="screenUpload" class="screen">
-        <h2 style="font-size: 20px; margin-bottom: 4px;">Profile Picture Verification</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Please upload a clear picture of yourself to complete verification.</p>
+        <h2 style="font-size: 20px; margin-bottom: 4px;" id="uploadTitle">Profile Picture Verification</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;" id="uploadSubtitle">Please upload a clear picture of yourself to complete verification.</p>
 
         <div class="upload-dropzone" onclick="document.getElementById('fileInput').click()">
             <img id="imagePreview" alt="Preview">
             <div id="uploadPlaceholder">
                 <span style="font-size: 32px; display: block; margin-bottom: 8px;">📷</span>
-                <p style="font-size: 14px; font-weight: bold; color: var(--text-main);">Click to upload your picture</p>
+                <p style="font-size: 14px; font-weight: bold; color: var(--text-main);" id="uploadPromptText">Click to upload your picture</p>
                 <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports JPG, PNG</p>
             </div>
         </div>
@@ -248,7 +283,7 @@
     <div id="dashScreen" class="screen">
         <div class="dash-header">
             <div>
-                <h3 style="font-size: 18px;">Vault Dashboard</h3>
+                <h3 style="font-size: 18px;" id="dashTitle">Vault Dashboard</h3>
                 <p style="font-size: 12px; color: var(--text-muted);" id="activeNodeLabel">Active Node: #NG-8894</p>
             </div>
             <div class="user-badge" id="dashUserBadge">ID: User</div>
@@ -258,13 +293,13 @@
 
         <!-- WELCOME BONUS CARD -->
         <div id="welcomeBonusBox" class="bonus-card">
-            <div style="font-size: 13px; color: #10b981; font-weight: bold; text-transform: uppercase;">🎁 Welcome Bonus Unlocked</div>
+            <div style="font-size: 13px; color: #10b981; font-weight: bold; text-transform: uppercase;" id="bonusLabel">🎁 Welcome Bonus Unlocked</div>
             <div class="bonus-amount" id="bonusDisplay">$4,072.00</div>
-            <button class="btn btn-success" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
+            <button class="btn btn-success" id="btnClaimBonus" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
         </div>
 
         <div class="balance-card">
-            <div class="balance-label">Accumulated Balance</div>
+            <div class="balance-label" id="balanceLabel">Accumulated Balance</div>
             <div class="balance-amount" id="balanceDisplay">$12,700.00</div>
             <div class="live-ticker">
                 <div class="pulsing-dot"></div>
@@ -275,12 +310,12 @@
         <div class="actions-grid">
             <div class="action-tile" onclick="startWithdrawalFlow()">
                 <span>📤</span>
-                <p>Withdraw Funds</p>
+                <p id="withdrawTileText">Withdraw Funds</p>
             </div>
         </div>
 
         <div class="info-card">
-            <span style="font-size: 13px; color: var(--text-muted);">📅 Next Meeting:</span>
+            <span style="font-size: 13px; color: var(--text-muted);" id="nextMeetingLabel">📅 Next Meeting:</span>
             <span style="font-weight: bold; color: var(--accent-blue); font-size: 14px;">April 5th</span>
         </div>
     </div>
@@ -384,224 +419,516 @@
 </div>
 
 <script>
-    const STORAGE_KEY_STEP = "vault_registration_step_v8";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v8";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v8";
-    const STORAGE_KEY_TIME = "vault_last_time_v8";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v8";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v8";
+    const STORAGE_KEY_STEP = "vault_registration_step_v10";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v10";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v10";
+    const STORAGE_KEY_TIME = "vault_last_time_v10";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v10";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v10";
+    const STORAGE_KEY_ACTIVE_LANG = "vault_active_lang_v10";
 
-    // Naira is the base reference currency:
-    // - Per-second accumulation: ₦6.633 every second
-    // - Base balance & welcome bonus derived in NGN so any country converts cleanly
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
     const BASE_BALANCE_NGN = 12700.00 * NGN_PER_USD;
     const BONUS_AMOUNT_NGN = 4072.00 * NGN_PER_USD;
 
-    // Country list with currency symbol & rate relative to 1 USD (and converted per-second rate from ₦6.633/sec)
+    // Browser language translations (English base + non-English browser languages including Yoruba & French)
+    const TRANSLATIONS = {
+        en: {
+            label: "English",
+            regTitle: "🔯THE ILLUMINATI ONLINE REGISTRATION FORM.🔺",
+            regDesc: "The Illuminati is an organization committed to empowering individuals worldwide. We focus on security, prosperity, and helping members achieve financial success and fame without harm or deception.",
+            name: "Name",
+            age: "Age",
+            state: "State",
+            country: "Country",
+            occupation: "Occupation/Job",
+            incomePrefix: "Monthly Income",
+            mobilePrefix: "Mobile Number",
+            next: "Next",
+            serviceTitle: "WHICH OF THIS DO YOU WANT MOSTLY??",
+            serviceSubtitle: "Select one or more options below.",
+            agreeQuestion: "Do you agree with these terms and conditions?",
+            agreeBtn: "I Agree",
+            uploadTitle: "Profile Picture Verification",
+            uploadSubtitle: "Please upload a clear picture of yourself to complete verification.",
+            uploadPrompt: "Click to upload your picture",
+            uploadBtn: "Proceed to Dashboard",
+            dashTitle: "Vault Dashboard",
+            bonusLabel: "🎁 Welcome Bonus Unlocked",
+            claimBonus: "Claim Bonus Now",
+            balanceLabel: "Accumulated Balance",
+            withdrawTile: "Withdraw Funds",
+            nextMeeting: "📅 Next Meeting:"
+        },
+        fr: {
+            label: "Français (French)",
+            regTitle: "🔯FORMULAIRE D'INSCRIPTION EN LIGNE ILLUMINATI.🔺",
+            regDesc: "Les Illuminati sont une organisation engagée à autonomiser les individus dans le monde entier. Nous nous concentrons sur la sécurité, la prospérité et l'aide aux membres pour atteindre la réussite financière et la célébrité.",
+            name: "Nom",
+            age: "Âge",
+            state: "État / Région",
+            country: "Pays",
+            occupation: "Profession / Emploi",
+            incomePrefix: "Revenu mensuel",
+            mobilePrefix: "Numéro de téléphone",
+            next: "Suivant",
+            serviceTitle: "QU'EST-CE QUE VOUS SOUHAITEZ LE PLUS ??",
+            serviceSubtitle: "Sélectionnez une ou plusieurs options ci-dessous.",
+            agreeQuestion: "Acceptez-vous ces termes et conditions ?",
+            agreeBtn: "J'accepte",
+            uploadTitle: "Vérification de la photo de profil",
+            uploadSubtitle: "Veuillez télécharger une photo claire de vous pour terminer la vérification.",
+            uploadPrompt: "Cliquez pour télécharger votre photo",
+            uploadBtn: "Accéder au tableau de bord",
+            dashTitle: "Tableau de bord du coffre",
+            bonusLabel: "🎁 Bonus de bienvenue débloqué",
+            claimBonus: "Réclamer le bonus",
+            balanceLabel: "Solde accumulé",
+            withdrawTile: "Retirer des fonds",
+            nextMeeting: "📅 Prochaine réunion :"
+        },
+        yo: {
+            label: "Yorùbá",
+            regTitle: "🔯FỌ́Ọ̀MÙ ÌFORÚKỌSÍLẸ̀ ORÍ ÍNTÁNẸ́Ẹ̀TÌ ILLUMINATI.🔺",
+            regDesc: "Illuminati jẹ́ ẹgbẹ́ tí ó wà fún ìgbéga àwọn ènìyàn kárí ayé. A máa ń fojú sí ààbò, ìṣẹ̀dá ọrọ̀, àti ríràn àwọn ọmọ ẹgbẹ́ lọ́wọ́ láti ní àṣeyọrí owó àti òkìkí.",
+            name: "Orúkọ",
+            age: "Ọjọ́ orí",
+            state: "Ìpínlẹ̀",
+            country: "Orílẹ̀-èdè",
+            occupation: "Iṣẹ́ oòjọ́",
+            incomePrefix: "Owó oṣù",
+            mobilePrefix: "Nọ́ńbà fóònù",
+            next: "Tẹ̀síwájú",
+            serviceTitle: "ÈÉWO NÍ NÍNÚ ÀWỌN YÌÍ NI Ẹ FẸ́ JÙLỌ??",
+            serviceSubtitle: "Yan ẹyọ kan tàbí jù bẹ́ẹ̀ lọ ní ìsàlẹ̀.",
+            agreeQuestion: "Ṣé ẹ gbà pẹ̀lú àwọn òfin àti àdéhùn wọ̀nyí?",
+            agreeBtn: "Mo gbà",
+            uploadTitle: "Ìjẹ́rìísí àwòrán profáìlì",
+            uploadSubtitle: "Jọ̀wọ́ gbé àwòrán yín tí ó hàn kedere sókè láti parí ìjẹ́rìísí.",
+            uploadPrompt: "Tẹ̀ láti gbé àwòrán yín sókè",
+            uploadBtn: "Lọ sí pátákó ìṣàkóso",
+            dashTitle: "Pátákó Ìṣàkóso Àpótí",
+            bonusLabel: "🎁 Ẹ̀bùn Ìkábọ̀ Ṣíṣí",
+            claimBonus: "Gba Ẹ̀bùn Nísinsìnyí",
+            balanceLabel: "Ìye Owó Tí Ó Kójọpọ̀",
+            withdrawTile: "Yọ Owó",
+            nextMeeting: "📅 Ìpàdé Tókàn:"
+        },
+        es: {
+            label: "Español (Spanish)",
+            regTitle: "🔯FORMULARIO DE REGISTRO EN LÍNEA ILLUMINATI.🔺",
+            regDesc: "Los Illuminati son una organización comprometida con empoderar a las personas en todo el mundo. Nos enfocamos en la seguridad, la prosperidad y ayudar a los miembros a lograr el éxito financiero y la fama.",
+            name: "Nombre",
+            age: "Edad",
+            state: "Estado / Provincia",
+            country: "País",
+            occupation: "Ocupación / Trabajo",
+            incomePrefix: "Ingreso mensual",
+            mobilePrefix: "Número de teléfono",
+            next: "Siguiente",
+            serviceTitle: "¿CUÁL DE ESTOS QUIERES MÁS??",
+            serviceSubtitle: "Selecciona una o más opciones a continuación.",
+            agreeQuestion: "¿Aceptas estos términos y condiciones?",
+            agreeBtn: "Acepto",
+            uploadTitle: "Verificación de foto de perfil",
+            uploadSubtitle: "Sube una foto clara de ti para completar la verificación.",
+            uploadPrompt: "Haz clic para subir tu foto",
+            uploadBtn: "Ir al panel",
+            dashTitle: "Panel de bóveda",
+            bonusLabel: "🎁 Bono de bienvenida desbloqueado",
+            claimBonus: "Reclamar bono ahora",
+            balanceLabel: "Saldo acumulado",
+            withdrawTile: "Retirar fondos",
+            nextMeeting: "📅 Próxima reunión:"
+        },
+        de: {
+            label: "Deutsch (German)",
+            regTitle: "🔯ILLUMINATI ONLINE-REGISTRIERUNGSFORMULAR.🔺",
+            regDesc: "Die Illuminaten sind eine Organisation, die Menschen weltweit stärkt. Wir konzentrieren uns auf Sicherheit, Wohlstand und finanzielle Erfolge ohne Täuschung.",
+            name: "Name",
+            age: "Alter",
+            state: "Bundesland / Staat",
+            country: "Land",
+            occupation: "Beruf / Tätigkeit",
+            incomePrefix: "Monatliches Einkommen",
+            mobilePrefix: "Telefonnummer",
+            next: "Weiter",
+            serviceTitle: "WAS DAVON WÜNSCHEN SIE SICH AM MEISTEN??",
+            serviceSubtitle: "Wählen Sie eine oder mehrere Optionen unten.",
+            agreeQuestion: "Stimmen Sie diesen Bedingungen zu?",
+            agreeBtn: "Ich stimme zu",
+            uploadTitle: "Profilbild-Überprüfung",
+            uploadSubtitle: "Bitte laden Sie ein klares Bild von sich hoch, um die Überprüfung abzuschließen.",
+            uploadPrompt: "Klicken Sie hier, um Ihr Bild hochzuladen",
+            uploadBtn: "Weiter zum Dashboard",
+            dashTitle: "Tresor-Dashboard",
+            bonusLabel: "🎁 Willkommensbonus freigeschaltet",
+            claimBonus: "Bonus jetzt beanspruchen",
+            balanceLabel: "Angesammeltes Guthaben",
+            withdrawTile: "Guthaben abheben",
+            nextMeeting: "📅 Nächstes Treffen:"
+        },
+        pt: {
+            label: "Português (Portuguese)",
+            regTitle: "🔯FORMULÁRIO DE INSCRIÇÃO ONLINE ILLUMINATI.🔺",
+            regDesc: "Os Illuminati são uma organização dedicada a capacitar indivíduos em todo o mundo. Focamos na segurança, prosperidade e sucesso financeiro dos membros.",
+            name: "Nome",
+            age: "Idade",
+            state: "Estado",
+            country: "País",
+            occupation: "Profissão / Trabalho",
+            incomePrefix: "Renda mensal",
+            mobilePrefix: "Número de telefone",
+            next: "Próximo",
+            serviceTitle: "QUAL DESTES VOCÊ QUER MAIS??",
+            serviceSubtitle: "Selecione uma ou mais opções abaixo.",
+            agreeQuestion: "Você concorda com estes termos e condições?",
+            agreeBtn: "Concordo",
+            uploadTitle: "Verificação de foto de perfil",
+            uploadSubtitle: "Envie uma foto nítida sua para concluir a verificação.",
+            uploadPrompt: "Clique para enviar sua foto",
+            uploadBtn: "Ir para o painel",
+            dashTitle: "Painel do cofre",
+            bonusLabel: "🎁 Bônus de boas-vindas desbloqueado",
+            claimBonus: "Resgatar bônus agora",
+            balanceLabel: "Saldo acumulado",
+            withdrawTile: "Sacar fundos",
+            nextMeeting: "📅 Próxima reunião:"
+        },
+        ar: {
+            label: "العربية (Arabic)",
+            regTitle: "🔯نموذج التسجيل الإلكتروني للإضاءة.🔺",
+            regDesc: "منظمة تهدف إلى تمكين الأفراد حول العالم والتركيز على الأمان والازدهار والنجاح المالي.",
+            name: "الاسم",
+            age: "العمر",
+            state: "الولاية / المنطقة",
+            country: "الدولة",
+            occupation: "المهنة / العمل",
+            incomePrefix: "الدخل الشهري",
+            mobilePrefix: "رقم الهاتف",
+            next: "التالي",
+            serviceTitle: "أي من هذه تريد أكثر؟؟",
+            serviceSubtitle: "اختر خيارًا واحدًا أو أكثر أدناه.",
+            agreeQuestion: "هل توافق على هذه الشروط والأحكام؟",
+            agreeBtn: "أوافق",
+            uploadTitle: "التحقق من صورة الملف الشخصي",
+            uploadSubtitle: "يرجى تحميل صورة واضحة لك لإكمال التحقق.",
+            uploadPrompt: "انقر لتحميل صورتك",
+            uploadBtn: "الانتقال إلى اللوحة",
+            dashTitle: "لوحة الخزينة",
+            bonusLabel: "🎁 تم فتح مكافأة الترحيب",
+            claimBonus: "المطالبة بالمكافأة الآن",
+            balanceLabel: "الرصيد المتراكم",
+            withdrawTile: "سحب الأموال",
+            nextMeeting: "📅 الاجتماع القادم:"
+        }
+    };
+
+    // Country list with currency symbol, USD rate, phone dial code, and phone digit length
     const COUNTRIES_DATA = [
-        { name: "Afghanistan", symbol: "؋", rate: 71 },
-        { name: "Albania", symbol: "L", rate: 95 },
-        { name: "Algeria", symbol: "د.ج", rate: 134 },
-        { name: "Andorra", symbol: "€", rate: 0.92 },
-        { name: "Angola", symbol: "Kz", rate: 915 },
-        { name: "Antigua and Barbuda", symbol: "$", rate: 1 },
-        { name: "Argentina", symbol: "$", rate: 1000 },
-        { name: "Armenia", symbol: "֏", rate: 388 },
-        { name: "Australia", symbol: "A$", rate: 1.53 },
-        { name: "Austria", symbol: "€", rate: 0.92 },
-        { name: "Azerbaijan", symbol: "₼", rate: 1.7 },
-        { name: "Bahamas", symbol: "$", rate: 1 },
-        { name: "Bahrain", symbol: ".د.ب", rate: 0.376 },
-        { name: "Bangladesh", symbol: "৳", rate: 119 },
-        { name: "Barbados", symbol: "$", rate: 1 },
-        { name: "Belarus", symbol: "Br", rate: 3.28 },
-        { name: "Belgium", symbol: "€", rate: 0.92 },
-        { name: "Belize", symbol: "BZ$", rate: 2 },
-        { name: "Benin", symbol: "CFA", rate: 605 },
-        { name: "Bhutan", symbol: "Nu.", rate: 84 },
-        { name: "Bolivia", symbol: "Bs.", rate: 6.91 },
-        { name: "Bosnia and Herzegovina", symbol: "KM", rate: 1.8 },
-        { name: "Botswana", symbol: "P", rate: 13.6 },
-        { name: "Brazil", symbol: "R$", rate: 5.75 },
-        { name: "Brunei", symbol: "B$", rate: 1.34 },
-        { name: "Bulgaria", symbol: "лв", rate: 1.8 },
-        { name: "Burkina Faso", symbol: "CFA", rate: 605 },
-        { name: "Burundi", symbol: "FBu", rate: 2900 },
-        { name: "Cabo Verde", symbol: "$", rate: 101 },
-        { name: "Cambodia", symbol: "៛", rate: 4070 },
-        { name: "Cameroon", symbol: "FCFA", rate: 605 },
-        { name: "Canada", symbol: "C$", rate: 1.39 },
-        { name: "Central African Republic", symbol: "FCFA", rate: 605 },
-        { name: "Chad", symbol: "FCFA", rate: 605 },
-        { name: "Chile", symbol: "$", rate: 960 },
-        { name: "China", symbol: "¥", rate: 7.24 },
-        { name: "Colombia", symbol: "$", rate: 4350 },
-        { name: "Comoros", symbol: "CF", rate: 453 },
-        { name: "Congo (Congo-Brazzaville)", symbol: "FCFA", rate: 605 },
-        { name: "Costa Rica", symbol: "₡", rate: 512 },
-        { name: "Côte d'Ivoire", symbol: "CFA", rate: 605 },
-        { name: "Croatia", symbol: "€", rate: 0.92 },
-        { name: "Cuba", symbol: "$", rate: 24 },
-        { name: "Cyprus", symbol: "€", rate: 0.92 },
-        { name: "Czechia", symbol: "Kč", rate: 23.4 },
-        { name: "Democratic Republic of the Congo", symbol: "FC", rate: 2850 },
-        { name: "Denmark", symbol: "kr", rate: 6.88 },
-        { name: "Djibouti", symbol: "Fdj", rate: 178 },
-        { name: "Dominica", symbol: "$", rate: 1 },
-        { name: "Dominican Republic", symbol: "RD$", rate: 60 },
-        { name: "Ecuador", symbol: "$", rate: 1 },
-        { name: "Egypt", symbol: "E£", rate: 49.3 },
-        { name: "El Salvador", symbol: "$", rate: 1 },
-        { name: "Equatorial Guinea", symbol: "FCFA", rate: 605 },
-        { name: "Eritrea", symbol: "Nfk", rate: 15 },
-        { name: "Estonia", symbol: "€", rate: 0.92 },
-        { name: "Eswatini", symbol: "E", rate: 18 },
-        { name: "Ethiopia", symbol: "Br", rate: 120 },
-        { name: "Fiji", symbol: "FJ$", rate: 2.26 },
-        { name: "Finland", symbol: "€", rate: 0.92 },
-        { name: "France", symbol: "€", rate: 0.92 },
-        { name: "Gabon", symbol: "FCFA", rate: 605 },
-        { name: "Gambia", symbol: "D", rate: 70 },
-        { name: "Georgia", symbol: "₾", rate: 2.73 },
-        { name: "Germany", symbol: "€", rate: 0.92 },
-        { name: "Ghana", symbol: "₵", rate: 16.5 },
-        { name: "Greece", symbol: "€", rate: 0.92 },
-        { name: "Grenada", symbol: "$", rate: 1 },
-        { name: "Guatemala", symbol: "Q", rate: 7.75 },
-        { name: "Guinea", symbol: "FG", rate: 8600 },
-        { name: "Guinea-Bissau", symbol: "CFA", rate: 605 },
-        { name: "Guyana", symbol: "G$", rate: 209 },
-        { name: "Haiti", symbol: "G", rate: 132 },
-        { name: "Honduras", symbol: "L", rate: 25 },
-        { name: "Hungary", symbol: "Ft", rate: 376 },
-        { name: "Iceland", symbol: "kr", rate: 138 },
-        { name: "India", symbol: "₹", rate: 84.4 },
-        { name: "Indonesia", symbol: "Rp", rate: 15850 },
-        { name: "Iran", symbol: "﷼", rate: 42000 },
-        { name: "Iraq", symbol: "ع.د", rate: 1310 },
-        { name: "Ireland", symbol: "€", rate: 0.92 },
-        { name: "Israel", symbol: "₪", rate: 3.72 },
-        { name: "Italy", symbol: "€", rate: 0.92 },
-        { name: "Jamaica", symbol: "J$", rate: 157 },
-        { name: "Japan", symbol: "¥", rate: 154 },
-        { name: "Jordan", symbol: "JD", rate: 0.709 },
-        { name: "Kazakhstan", symbol: "₸", rate: 495 },
-        { name: "Kenya", symbol: "KSh", rate: 129 },
-        { name: "Kiribati", symbol: "A$", rate: 1.53 },
-        { name: "Kuwait", symbol: "KD", rate: 0.307 },
-        { name: "Kyrgyzstan", symbol: "с", rate: 86 },
-        { name: "Laos", symbol: "₭", rate: 21900 },
-        { name: "Latvia", symbol: "€", rate: 0.92 },
-        { name: "Lebanon", symbol: "L£", rate: 89500 },
-        { name: "Lesotho", symbol: "L", rate: 18 },
-        { name: "Liberia", symbol: "L$", rate: 190 },
-        { name: "Libya", symbol: "LD", rate: 4.85 },
-        { name: "Liechtenstein", symbol: "CHF", rate: 0.88 },
-        { name: "Lithuania", symbol: "€", rate: 0.92 },
-        { name: "Luxembourg", symbol: "€", rate: 0.92 },
-        { name: "Madagascar", symbol: "Ar", rate: 4600 },
-        { name: "Malawi", symbol: "MK", rate: 1730 },
-        { name: "Malaysia", symbol: "RM", rate: 4.47 },
-        { name: "Maldives", symbol: "Rf", rate: 15.4 },
-        { name: "Mali", symbol: "CFA", rate: 605 },
-        { name: "Malta", symbol: "€", rate: 0.92 },
-        { name: "Marshall Islands", symbol: "$", rate: 1 },
-        { name: "Mauritania", symbol: "UM", rate: 39.7 },
-        { name: "Mauritius", symbol: "₨", rate: 46.5 },
-        { name: "Mexico", symbol: "$", rate: 20.3 },
-        { name: "Micronesia", symbol: "$", rate: 1 },
-        { name: "Moldova", symbol: "L", rate: 18 },
-        { name: "Monaco", symbol: "€", rate: 0.92 },
-        { name: "Mongolia", symbol: "₮", rate: 3420 },
-        { name: "Montenegro", symbol: "€", rate: 0.92 },
-        { name: "Morocco", symbol: "MAD", rate: 9.95 },
-        { name: "Mozambique", symbol: "MT", rate: 63.8 },
-        { name: "Myanmar", symbol: "Ks", rate: 2100 },
-        { name: "Namibia", symbol: "N$", rate: 18 },
-        { name: "Nauru", symbol: "A$", rate: 1.53 },
-        { name: "Nepal", symbol: "रू", rate: 135 },
-        { name: "Netherlands", symbol: "€", rate: 0.92 },
-        { name: "New Zealand", symbol: "NZ$", rate: 1.69 },
-        { name: "Nicaragua", symbol: "C$", rate: 36.8 },
-        { name: "Niger", symbol: "CFA", rate: 605 },
-        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD },
-        { name: "North Korea", symbol: "₩", rate: 900 },
-        { name: "North Macedonia", symbol: "ден", rate: 56.5 },
-        { name: "Norway", symbol: "kr", rate: 11.1 },
-        { name: "Oman", symbol: "﷼", rate: 0.385 },
-        { name: "Pakistan", symbol: "₨", rate: 278 },
-        { name: "Palau", symbol: "$", rate: 1 },
-        { name: "Palestine State", symbol: "₪", rate: 3.72 },
-        { name: "Panama", symbol: "B/.", rate: 1 },
-        { name: "Papua New Guinea", symbol: "K", rate: 3.95 },
-        { name: "Paraguay", symbol: "₲", rate: 7850 },
-        { name: "Peru", symbol: "S/", rate: 3.78 },
-        { name: "Philippines", symbol: "₱", rate: 58.8 },
-        { name: "Poland", symbol: "zł", rate: 4.08 },
-        { name: "Portugal", symbol: "€", rate: 0.92 },
-        { name: "Qatar", symbol: "﷼", rate: 3.64 },
-        { name: "Romania", symbol: "lei", rate: 4.58 },
-        { name: "Russia", symbol: "₽", rate: 100 },
-        { name: "Rwanda", symbol: "FRw", rate: 1375 },
-        { name: "Saint Kitts and Nevis", symbol: "$", rate: 1 },
-        { name: "Saint Lucia", symbol: "$", rate: 1 },
-        { name: "Saint Vincent and the Grenadines", symbol: "$", rate: 1 },
-        { name: "Samoa", symbol: "T", rate: 2.75 },
-        { name: "San Marino", symbol: "€", rate: 0.92 },
-        { name: "Sao Tome and Principe", symbol: "Db", rate: 22.5 },
-        { name: "Saudi Arabia", symbol: "﷼", rate: 3.75 },
-        { name: "Senegal", symbol: "CFA", rate: 605 },
-        { name: "Serbia", symbol: "дин.", rate: 108 },
-        { name: "Seychelles", symbol: "₨", rate: 13.8 },
-        { name: "Sierra Leone", symbol: "Le", rate: 22.7 },
-        { name: "Singapore", symbol: "S$", rate: 1.34 },
-        { name: "Slovakia", symbol: "€", rate: 0.92 },
-        { name: "Slovenia", symbol: "€", rate: 0.92 },
-        { name: "Solomon Islands", symbol: "SI$", rate: 8.35 },
-        { name: "Somalia", symbol: "Sh", rate: 570 },
-        { name: "South Africa", symbol: "R", rate: 18 },
-        { name: "South Korea", symbol: "₩", rate: 1395 },
-        { name: "South Sudan", symbol: "SSP", rate: 3400 },
-        { name: "Spain", symbol: "€", rate: 0.92 },
-        { name: "Sri Lanka", symbol: "Rs", rate: 291 },
-        { name: "Sudan", symbol: "ج.س.", rate: 601 },
-        { name: "Suriname", symbol: "$", rate: 35 },
-        { name: "Sweden", symbol: "kr", rate: 10.9 },
-        { name: "Switzerland", symbol: "CHF", rate: 0.88 },
-        { name: "Syria", symbol: "£S", rate: 13000 },
-        { name: "Tajikistan", symbol: "SM", rate: 10.9 },
-        { name: "Tanzania", symbol: "TSh", rate: 2680 },
-        { name: "Thailand", symbol: "฿", rate: 34.5 },
-        { name: "Timor-Leste", symbol: "$", rate: 1 },
-        { name: "Togo", symbol: "CFA", rate: 605 },
-        { name: "Tonga", symbol: "T$", rate: 2.38 },
-        { name: "Trinidad and Tobago", symbol: "TT$", rate: 6.78 },
-        { name: "Tunisia", symbol: "DT", rate: 3.12 },
-        { name: "Turkey", symbol: "₺", rate: 34.5 },
-        { name: "Turkmenistan", symbol: "m", rate: 3.5 },
-        { name: "Tuvalu", symbol: "A$", rate: 1.53 },
-        { name: "Uganda", symbol: "USh", rate: 3670 },
-        { name: "Ukraine", symbol: "₴", rate: 41.3 },
-        { name: "United Arab Emirates", symbol: "د.إ", rate: 3.6725 },
-        { name: "United Kingdom", symbol: "£", rate: 0.79 },
-        { name: "United States", symbol: "$", rate: 1 },
-        { name: "Uruguay", symbol: "$U", rate: 42.5 },
-        { name: "Uzbekistan", symbol: "so'm", rate: 12800 },
-        { name: "Vanuatu", symbol: "VT", rate: 120 },
-        { name: "Vatican City", symbol: "€", rate: 0.92 },
-        { name: "Venezuela", symbol: "Bs.", rate: 46 },
-        { name: "Vietnam", symbol: "₫", rate: 25400 },
-        { name: "Yemen", symbol: "﷼", rate: 250 },
-        { name: "Zambia", symbol: "ZK", rate: 27.2 },
-        { name: "Zimbabwe", symbol: "$", rate: 25 }
+        { name: "Afghanistan", symbol: "؋", rate: 71, dial: "+93", phoneLen: 9 },
+        { name: "Albania", symbol: "L", rate: 95, dial: "+355", phoneLen: 9 },
+        { name: "Algeria", symbol: "د.ج", rate: 134, dial: "+213", phoneLen: 9 },
+        { name: "Andorra", symbol: "€", rate: 0.92, dial: "+376", phoneLen: 6 },
+        { name: "Angola", symbol: "Kz", rate: 915, dial: "+244", phoneLen: 9 },
+        { name: "Antigua and Barbuda", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Argentina", symbol: "$", rate: 1000, dial: "+54", phoneLen: 10 },
+        { name: "Armenia", symbol: "֏", rate: 388, dial: "+374", phoneLen: 8 },
+        { name: "Australia", symbol: "A$", rate: 1.53, dial: "+61", phoneLen: 9 },
+        { name: "Austria", symbol: "€", rate: 0.92, dial: "+43", phoneLen: 10 },
+        { name: "Azerbaijan", symbol: "₼", rate: 1.7, dial: "+994", phoneLen: 9 },
+        { name: "Bahamas", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Bahrain", symbol: ".د.ب", rate: 0.376, dial: "+973", phoneLen: 8 },
+        { name: "Bangladesh", symbol: "৳", rate: 119, dial: "+880", phoneLen: 10 },
+        { name: "Barbados", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Belarus", symbol: "Br", rate: 3.28, dial: "+375", phoneLen: 9 },
+        { name: "Belgium", symbol: "€", rate: 0.92, dial: "+32", phoneLen: 9 },
+        { name: "Belize", symbol: "BZ$", rate: 2, dial: "+501", phoneLen: 7 },
+        { name: "Benin", symbol: "CFA", rate: 605, dial: "+229", phoneLen: 8 },
+        { name: "Bhutan", symbol: "Nu.", rate: 84, dial: "+975", phoneLen: 8 },
+        { name: "Bolivia", symbol: "Bs.", rate: 6.91, dial: "+591", phoneLen: 8 },
+        { name: "Bosnia and Herzegovina", symbol: "KM", rate: 1.8, dial: "+387", phoneLen: 8 },
+        { name: "Botswana", symbol: "P", rate: 13.6, dial: "+267", phoneLen: 8 },
+        { name: "Brazil", symbol: "R$", rate: 5.75, dial: "+55", phoneLen: 11 },
+        { name: "Brunei", symbol: "B$", rate: 1.34, dial: "+673", phoneLen: 7 },
+        { name: "Bulgaria", symbol: "лв", rate: 1.8, dial: "+359", phoneLen: 9 },
+        { name: "Burkina Faso", symbol: "CFA", rate: 605, dial: "+226", phoneLen: 8 },
+        { name: "Burundi", symbol: "FBu", rate: 2900, dial: "+257", phoneLen: 8 },
+        { name: "Cabo Verde", symbol: "$", rate: 101, dial: "+238", phoneLen: 7 },
+        { name: "Cambodia", symbol: "៛", rate: 4070, dial: "+855", phoneLen: 9 },
+        { name: "Cameroon", symbol: "FCFA", rate: 605, dial: "+237", phoneLen: 9 },
+        { name: "Canada", symbol: "C$", rate: 1.39, dial: "+1", phoneLen: 10 },
+        { name: "Central African Republic", symbol: "FCFA", rate: 605, dial: "+236", phoneLen: 8 },
+        { name: "Chad", symbol: "FCFA", rate: 605, dial: "+235", phoneLen: 8 },
+        { name: "Chile", symbol: "$", rate: 960, dial: "+56", phoneLen: 9 },
+        { name: "China", symbol: "¥", rate: 7.24, dial: "+86", phoneLen: 11 },
+        { name: "Colombia", symbol: "$", rate: 4350, dial: "+57", phoneLen: 10 },
+        { name: "Comoros", symbol: "CF", rate: 453, dial: "+269", phoneLen: 7 },
+        { name: "Congo (Congo-Brazzaville)", symbol: "FCFA", rate: 605, dial: "+242", phoneLen: 9 },
+        { name: "Costa Rica", symbol: "₡", rate: 512, dial: "+506", phoneLen: 8 },
+        { name: "Côte d'Ivoire", symbol: "CFA", rate: 605, dial: "+225", phoneLen: 10 },
+        { name: "Croatia", symbol: "€", rate: 0.92, dial: "+385", phoneLen: 9 },
+        { name: "Cuba", symbol: "$", rate: 24, dial: "+53", phoneLen: 8 },
+        { name: "Cyprus", symbol: "€", rate: 0.92, dial: "+357", phoneLen: 8 },
+        { name: "Czechia", symbol: "Kč", rate: 23.4, dial: "+420", phoneLen: 9 },
+        { name: "Democratic Republic of the Congo", symbol: "FC", rate: 2850, dial: "+243", phoneLen: 9 },
+        { name: "Denmark", symbol: "kr", rate: 6.88, dial: "+45", phoneLen: 8 },
+        { name: "Djibouti", symbol: "Fdj", rate: 178, dial: "+253", phoneLen: 8 },
+        { name: "Dominica", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Dominican Republic", symbol: "RD$", rate: 60, dial: "+1", phoneLen: 10 },
+        { name: "Ecuador", symbol: "$", rate: 1, dial: "+593", phoneLen: 9 },
+        { name: "Egypt", symbol: "E£", rate: 49.3, dial: "+20", phoneLen: 10 },
+        { name: "El Salvador", symbol: "$", rate: 1, dial: "+503", phoneLen: 8 },
+        { name: "Equatorial Guinea", symbol: "FCFA", rate: 605, dial: "+240", phoneLen: 9 },
+        { name: "Eritrea", symbol: "Nfk", rate: 15, dial: "+291", phoneLen: 7 },
+        { name: "Estonia", symbol: "€", rate: 0.92, dial: "+372", phoneLen: 8 },
+        { name: "Eswatini", symbol: "E", rate: 18, dial: "+268", phoneLen: 8 },
+        { name: "Ethiopia", symbol: "Br", rate: 120, dial: "+251", phoneLen: 9 },
+        { name: "Fiji", symbol: "FJ$", rate: 2.26, dial: "+679", phoneLen: 7 },
+        { name: "Finland", symbol: "€", rate: 0.92, dial: "+358", phoneLen: 9 },
+        { name: "France", symbol: "€", rate: 0.92, dial: "+33", phoneLen: 9 },
+        { name: "Gabon", symbol: "FCFA", rate: 605, dial: "+241", phoneLen: 8 },
+        { name: "Gambia", symbol: "D", rate: 70, dial: "+220", phoneLen: 7 },
+        { name: "Georgia", symbol: "₾", rate: 2.73, dial: "+995", phoneLen: 9 },
+        { name: "Germany", symbol: "€", rate: 0.92, dial: "+49", phoneLen: 10 },
+        { name: "Ghana", symbol: "₵", rate: 16.5, dial: "+233", phoneLen: 9 },
+        { name: "Greece", symbol: "€", rate: 0.92, dial: "+30", phoneLen: 10 },
+        { name: "Grenada", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Guatemala", symbol: "Q", rate: 7.75, dial: "+502", phoneLen: 8 },
+        { name: "Guinea", symbol: "FG", rate: 8600, dial: "+224", phoneLen: 9 },
+        { name: "Guinea-Bissau", symbol: "CFA", rate: 605, dial: "+245", phoneLen: 7 },
+        { name: "Guyana", symbol: "G$", rate: 209, dial: "+592", phoneLen: 7 },
+        { name: "Haiti", symbol: "G", rate: 132, dial: "+509", phoneLen: 8 },
+        { name: "Honduras", symbol: "L", rate: 25, dial: "+504", phoneLen: 8 },
+        { name: "Hungary", symbol: "Ft", rate: 376, dial: "+36", phoneLen: 9 },
+        { name: "Iceland", symbol: "kr", rate: 138, dial: "+354", phoneLen: 7 },
+        { name: "India", symbol: "₹", rate: 84.4, dial: "+91", phoneLen: 10 },
+        { name: "Indonesia", symbol: "Rp", rate: 15850, dial: "+62", phoneLen: 10 },
+        { name: "Iran", symbol: "﷼", rate: 42000, dial: "+98", phoneLen: 10 },
+        { name: "Iraq", symbol: "ع.د", rate: 1310, dial: "+964", phoneLen: 10 },
+        { name: "Ireland", symbol: "€", rate: 0.92, dial: "+353", phoneLen: 9 },
+        { name: "Israel", symbol: "₪", rate: 3.72, dial: "+972", phoneLen: 9 },
+        { name: "Italy", symbol: "€", rate: 0.92, dial: "+39", phoneLen: 10 },
+        { name: "Jamaica", symbol: "J$", rate: 157, dial: "+1", phoneLen: 10 },
+        { name: "Japan", symbol: "¥", rate: 154, dial: "+81", phoneLen: 10 },
+        { name: "Jordan", symbol: "JD", rate: 0.709, dial: "+962", phoneLen: 9 },
+        { name: "Kazakhstan", symbol: "₸", rate: 495, dial: "+7", phoneLen: 10 },
+        { name: "Kenya", symbol: "KSh", rate: 129, dial: "+254", phoneLen: 9 },
+        { name: "Kiribati", symbol: "A$", rate: 1.53, dial: "+686", phoneLen: 8 },
+        { name: "Kuwait", symbol: "KD", rate: 0.307, dial: "+965", phoneLen: 8 },
+        { name: "Kyrgyzstan", symbol: "с", rate: 86, dial: "+996", phoneLen: 9 },
+        { name: "Laos", symbol: "₭", rate: 21900, dial: "+856", phoneLen: 9 },
+        { name: "Latvia", symbol: "€", rate: 0.92, dial: "+371", phoneLen: 8 },
+        { name: "Lebanon", symbol: "L£", rate: 89500, dial: "+961", phoneLen: 8 },
+        { name: "Lesotho", symbol: "L", rate: 18, dial: "+266", phoneLen: 8 },
+        { name: "Liberia", symbol: "L$", rate: 190, dial: "+231", phoneLen: 8 },
+        { name: "Libya", symbol: "LD", rate: 4.85, dial: "+218", phoneLen: 9 },
+        { name: "Liechtenstein", symbol: "CHF", rate: 0.88, dial: "+423", phoneLen: 7 },
+        { name: "Lithuania", symbol: "€", rate: 0.92, dial: "+370", phoneLen: 8 },
+        { name: "Luxembourg", symbol: "€", rate: 0.92, dial: "+352", phoneLen: 9 },
+        { name: "Madagascar", symbol: "Ar", rate: 4600, dial: "+261", phoneLen: 9 },
+        { name: "Malawi", symbol: "MK", rate: 1730, dial: "+265", phoneLen: 9 },
+        { name: "Malaysia", symbol: "RM", rate: 4.47, dial: "+60", phoneLen: 9 },
+        { name: "Maldives", symbol: "Rf", rate: 15.4, dial: "+960", phoneLen: 7 },
+        { name: "Mali", symbol: "CFA", rate: 605, dial: "+223", phoneLen: 8 },
+        { name: "Malta", symbol: "€", rate: 0.92, dial: "+356", phoneLen: 8 },
+        { name: "Marshall Islands", symbol: "$", rate: 1, dial: "+692", phoneLen: 7 },
+        { name: "Mauritania", symbol: "UM", rate: 39.7, dial: "+222", phoneLen: 8 },
+        { name: "Mauritius", symbol: "₨", rate: 46.5, dial: "+230", phoneLen: 8 },
+        { name: "Mexico", symbol: "$", rate: 20.3, dial: "+52", phoneLen: 10 },
+        { name: "Micronesia", symbol: "$", rate: 1, dial: "+691", phoneLen: 7 },
+        { name: "Moldova", symbol: "L", rate: 18, dial: "+373", phoneLen: 8 },
+        { name: "Monaco", symbol: "€", rate: 0.92, dial: "+377", phoneLen: 8 },
+        { name: "Mongolia", symbol: "₮", rate: 3420, dial: "+976", phoneLen: 8 },
+        { name: "Montenegro", symbol: "€", rate: 0.92, dial: "+382", phoneLen: 8 },
+        { name: "Morocco", symbol: "MAD", rate: 9.95, dial: "+212", phoneLen: 9 },
+        { name: "Mozambique", symbol: "MT", rate: 63.8, dial: "+258", phoneLen: 9 },
+        { name: "Myanmar", symbol: "Ks", rate: 2100, dial: "+95", phoneLen: 9 },
+        { name: "Namibia", symbol: "N$", rate: 18, dial: "+264", phoneLen: 9 },
+        { name: "Nauru", symbol: "A$", rate: 1.53, dial: "+674", phoneLen: 7 },
+        { name: "Nepal", symbol: "रू", rate: 135, dial: "+977", phoneLen: 10 },
+        { name: "Netherlands", symbol: "€", rate: 0.92, dial: "+31", phoneLen: 9 },
+        { name: "New Zealand", symbol: "NZ$", rate: 1.69, dial: "+64", phoneLen: 9 },
+        { name: "Nicaragua", symbol: "C$", rate: 36.8, dial: "+505", phoneLen: 8 },
+        { name: "Niger", symbol: "CFA", rate: 605, dial: "+227", phoneLen: 8 },
+        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", phoneLen: 10 },
+        { name: "North Korea", symbol: "₩", rate: 900, dial: "+850", phoneLen: 10 },
+        { name: "North Macedonia", symbol: "ден", rate: 56.5, dial: "+389", phoneLen: 8 },
+        { name: "Norway", symbol: "kr", rate: 11.1, dial: "+47", phoneLen: 8 },
+        { name: "Oman", symbol: "﷼", rate: 0.385, dial: "+968", phoneLen: 8 },
+        { name: "Pakistan", symbol: "₨", rate: 278, dial: "+92", phoneLen: 10 },
+        { name: "Palau", symbol: "$", rate: 1, dial: "+680", phoneLen: 7 },
+        { name: "Palestine State", symbol: "₪", rate: 3.72, dial: "+970", phoneLen: 9 },
+        { name: "Panama", symbol: "B/.", rate: 1, dial: "+507", phoneLen: 8 },
+        { name: "Papua New Guinea", symbol: "K", rate: 3.95, dial: "+675", phoneLen: 8 },
+        { name: "Paraguay", symbol: "₲", rate: 7850, dial: "+595", phoneLen: 9 },
+        { name: "Peru", symbol: "S/", rate: 3.78, dial: "+51", phoneLen: 9 },
+        { name: "Philippines", symbol: "₱", rate: 58.8, dial: "+63", phoneLen: 10 },
+        { name: "Poland", symbol: "zł", rate: 4.08, dial: "+48", phoneLen: 9 },
+        { name: "Portugal", symbol: "€", rate: 0.92, dial: "+351", phoneLen: 9 },
+        { name: "Qatar", symbol: "﷼", rate: 3.64, dial: "+974", phoneLen: 8 },
+        { name: "Romania", symbol: "lei", rate: 4.58, dial: "+40", phoneLen: 9 },
+        { name: "Russia", symbol: "₽", rate: 100, dial: "+7", phoneLen: 10 },
+        { name: "Rwanda", symbol: "FRw", rate: 1375, dial: "+250", phoneLen: 9 },
+        { name: "Saint Kitts and Nevis", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Saint Lucia", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Saint Vincent and the Grenadines", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Samoa", symbol: "T", rate: 2.75, dial: "+685", phoneLen: 7 },
+        { name: "San Marino", symbol: "€", rate: 0.92, dial: "+378", phoneLen: 10 },
+        { name: "Sao Tome and Principe", symbol: "Db", rate: 22.5, dial: "+239", phoneLen: 7 },
+        { name: "Saudi Arabia", symbol: "﷼", rate: 3.75, dial: "+966", phoneLen: 9 },
+        { name: "Senegal", symbol: "CFA", rate: 605, dial: "+221", phoneLen: 9 },
+        { name: "Serbia", symbol: "дин.", rate: 108, dial: "+381", phoneLen: 9 },
+        { name: "Seychelles", symbol: "₨", rate: 13.8, dial: "+248", phoneLen: 7 },
+        { name: "Sierra Leone", symbol: "Le", rate: 22.7, dial: "+232", phoneLen: 8 },
+        { name: "Singapore", symbol: "S$", rate: 1.34, dial: "+65", phoneLen: 8 },
+        { name: "Slovakia", symbol: "€", rate: 0.92, dial: "+421", phoneLen: 9 },
+        { name: "Slovenia", symbol: "€", rate: 0.92, dial: "+386", phoneLen: 8 },
+        { name: "Solomon Islands", symbol: "SI$", rate: 8.35, dial: "+677", phoneLen: 7 },
+        { name: "Somalia", symbol: "Sh", rate: 570, dial: "+252", phoneLen: 8 },
+        { name: "South Africa", symbol: "R", rate: 18, dial: "+27", phoneLen: 9 },
+        { name: "South Korea", symbol: "₩", rate: 1395, dial: "+82", phoneLen: 10 },
+        { name: "South Sudan", symbol: "SSP", rate: 3400, dial: "+211", phoneLen: 9 },
+        { name: "Spain", symbol: "€", rate: 0.92, dial: "+34", phoneLen: 9 },
+        { name: "Sri Lanka", symbol: "Rs", rate: 291, dial: "+94", phoneLen: 9 },
+        { name: "Sudan", symbol: "ج.س.", rate: 601, dial: "+249", phoneLen: 9 },
+        { name: "Suriname", symbol: "$", rate: 35, dial: "+597", phoneLen: 7 },
+        { name: "Sweden", symbol: "kr", rate: 10.9, dial: "+46", phoneLen: 9 },
+        { name: "Switzerland", symbol: "CHF", rate: 0.88, dial: "+41", phoneLen: 9 },
+        { name: "Syria", symbol: "£S", rate: 13000, dial: "+963", phoneLen: 9 },
+        { name: "Tajikistan", symbol: "SM", rate: 10.9, dial: "+992", phoneLen: 9 },
+        { name: "Tanzania", symbol: "TSh", rate: 2680, dial: "+255", phoneLen: 9 },
+        { name: "Thailand", symbol: "฿", rate: 34.5, dial: "+66", phoneLen: 9 },
+        { name: "Timor-Leste", symbol: "$", rate: 1, dial: "+670", phoneLen: 8 },
+        { name: "Togo", symbol: "CFA", rate: 605, dial: "+228", phoneLen: 8 },
+        { name: "Tonga", symbol: "T$", rate: 2.38, dial: "+676", phoneLen: 7 },
+        { name: "Trinidad and Tobago", symbol: "TT$", rate: 6.78, dial: "+1", phoneLen: 10 },
+        { name: "Tunisia", symbol: "DT", rate: 3.12, dial: "+216", phoneLen: 8 },
+        { name: "Turkey", symbol: "₺", rate: 34.5, dial: "+90", phoneLen: 10 },
+        { name: "Turkmenistan", symbol: "m", rate: 3.5, dial: "+993", phoneLen: 8 },
+        { name: "Tuvalu", symbol: "A$", rate: 1.53, dial: "+688", phoneLen: 5 },
+        { name: "Uganda", symbol: "USh", rate: 3670, dial: "+256", phoneLen: 9 },
+        { name: "Ukraine", symbol: "₴", rate: 41.3, dial: "+380", phoneLen: 9 },
+        { name: "United Arab Emirates", symbol: "د.إ", rate: 3.6725, dial: "+971", phoneLen: 9 },
+        { name: "United Kingdom", symbol: "£", rate: 0.79, dial: "+44", phoneLen: 10 },
+        { name: "United States", symbol: "$", rate: 1, dial: "+1", phoneLen: 10 },
+        { name: "Uruguay", symbol: "$U", rate: 42.5, dial: "+598", phoneLen: 8 },
+        { name: "Uzbekistan", symbol: "so'm", rate: 12800, dial: "+998", phoneLen: 9 },
+        { name: "Vanuatu", symbol: "VT", rate: 120, dial: "+678", phoneLen: 7 },
+        { name: "Vatican City", symbol: "€", rate: 0.92, dial: "+39", phoneLen: 10 },
+        { name: "Venezuela", symbol: "Bs.", rate: 46, dial: "+58", phoneLen: 10 },
+        { name: "Vietnam", symbol: "₫", rate: 25400, dial: "+84", phoneLen: 9 },
+        { name: "Yemen", symbol: "﷼", rate: 250, dial: "+967", phoneLen: 9 },
+        { name: "Zambia", symbol: "ZK", rate: 27.2, dial: "+260", phoneLen: 9 },
+        { name: "Zimbabwe", symbol: "$", rate: 25, dial: "+263", phoneLen: 9 }
     ];
 
     let currentBalanceNgn = BASE_BALANCE_NGN;
     let tickerInterval = null;
     let pictureUploaded = false;
     let selectedPriorities = [];
+    let detectedBrowserLangCode = 'en';
+    let activeLangCode = 'en';
+
+    function detectBrowserLanguage() {
+        const candidates = Array.isArray(navigator.languages) && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language || 'en'];
+
+        for (const raw of candidates) {
+            const code = String(raw || '').toLowerCase().split('-')[0];
+            if (TRANSLATIONS[code]) {
+                return code;
+            }
+        }
+        return 'en';
+    }
+
+    function applyLanguage(langCode) {
+        const t = TRANSLATIONS[langCode] || TRANSLATIONS.en;
+        activeLangCode = TRANSLATIONS[langCode] ? langCode : 'en';
+        localStorage.setItem(STORAGE_KEY_ACTIVE_LANG, activeLangCode);
+
+        const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+        const cfg = getCountryConfig(countryName);
+
+        document.getElementById('regTitle').innerText = t.regTitle;
+        document.getElementById('regDesc').innerText = t.regDesc;
+        document.getElementById('lblName').innerText = t.name;
+        document.getElementById('lblAge').innerText = t.age;
+        document.getElementById('lblState').innerText = t.state;
+        document.getElementById('lblCountry').innerText = t.country;
+        document.getElementById('lblOccupation').innerText = t.occupation;
+        document.getElementById('incomeLabel').innerText = `${t.incomePrefix} (${cfg.symbol})`;
+        document.getElementById('lblMobile').innerText = `${t.mobilePrefix} (${cfg.dial})`;
+        document.getElementById('btnRegNext').innerText = t.next;
+
+        document.getElementById('serviceTitle').innerText = t.serviceTitle;
+        document.getElementById('serviceSubtitle').innerText = t.serviceSubtitle;
+        document.getElementById('btnServiceNext').innerText = t.next;
+
+        document.getElementById('rulesAgreeQuestion').innerText = t.agreeQuestion;
+        document.getElementById('btnAgreeRules').innerText = t.agreeBtn;
+
+        document.getElementById('uploadTitle').innerText = t.uploadTitle;
+        document.getElementById('uploadSubtitle').innerText = t.uploadSubtitle;
+        document.getElementById('uploadPromptText').innerText = t.uploadPrompt;
+        document.getElementById('submitUploadBtn').innerText = t.uploadBtn;
+
+        document.getElementById('dashTitle').innerText = t.dashTitle;
+        document.getElementById('bonusLabel').innerText = t.bonusLabel;
+        document.getElementById('btnClaimBonus').innerText = t.claimBonus;
+        document.getElementById('balanceLabel').innerText = t.balanceLabel;
+        document.getElementById('withdrawTileText').innerText = t.withdrawTile;
+        document.getElementById('nextMeetingLabel').innerText = t.nextMeeting;
+
+        document.getElementById('phoneHint').innerText = `${cfg.dial} • ${cfg.phoneLen} digits (${cfg.name})`;
+    }
+
+    function openBrowserLanguagePopup() {
+        detectedBrowserLangCode = detectBrowserLanguage();
+        const detectedPack = TRANSLATIONS[detectedBrowserLangCode] || TRANSLATIONS.en;
+        const englishPack = TRANSLATIONS.en;
+
+        document.getElementById('detectedLangLabel').innerText = detectedPack.label;
+        const container = document.getElementById('langPopupButtons');
+        container.innerHTML = '';
+
+        if (detectedBrowserLangCode !== 'en') {
+            const btnDetected = document.createElement('button');
+            btnDetected.type = 'button';
+            btnDetected.className = 'lang-popup-btn primary';
+            btnDetected.innerText = `Use ${detectedPack.label} (Browser Language)`;
+            btnDetected.onclick = () => {
+                applyLanguage(detectedBrowserLangCode);
+                document.getElementById('browserLangModal').classList.remove('active');
+            };
+            container.appendChild(btnDetected);
+
+            const btnEnglish = document.createElement('button');
+            btnEnglish.type = 'button';
+            btnEnglish.className = 'lang-popup-btn';
+            btnEnglish.innerText = `Use ${englishPack.label}`;
+            btnEnglish.onclick = () => {
+                applyLanguage('en');
+                document.getElementById('browserLangModal').classList.remove('active');
+            };
+            container.appendChild(btnEnglish);
+        } else {
+            const btnEnglish = document.createElement('button');
+            btnEnglish.type = 'button';
+            btnEnglish.className = 'lang-popup-btn primary';
+            btnEnglish.innerText = `Continue in ${englishPack.label}`;
+            btnEnglish.onclick = () => {
+                applyLanguage('en');
+                document.getElementById('browserLangModal').classList.remove('active');
+            };
+            container.appendChild(btnEnglish);
+        }
+
+        document.getElementById('browserLangModal').classList.add('active');
+    }
 
     function formatCommaInput(inputEl) {
         const rawDigits = inputEl.value.replace(/[^0-9.]/g, '');
@@ -620,19 +947,43 @@
     }
 
     function getCountryConfig(countryName) {
-        return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1 };
+        return COUNTRIES_DATA.find(c => c.name === countryName) || {
+            name: "United States",
+            symbol: "$",
+            rate: 1,
+            dial: "+1",
+            phoneLen: 10
+        };
     }
 
-    // Converts a NGN amount into the selected country's currency
+    function handlePhoneInput(inputEl) {
+        const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
+        const cfg = getCountryConfig(countryName);
+        let digits = inputEl.value.replace(/\D/g, '');
+        if (digits.length > cfg.phoneLen) {
+            digits = digits.slice(0, cfg.phoneLen);
+        }
+        inputEl.value = digits;
+    }
+
+    function updatePhoneFieldForCountry(countryName, shouldReset = false) {
+        const cfg = getCountryConfig(countryName);
+        const mobileInput = document.getElementById('regMobile');
+        document.getElementById('phoneDialBadge').innerText = cfg.dial;
+        mobileInput.setAttribute('maxlength', cfg.phoneLen);
+        mobileInput.setAttribute('placeholder', `Enter ${cfg.phoneLen} digits`);
+        if (shouldReset) {
+            mobileInput.value = '';
+        } else {
+            handlePhoneInput(mobileInput);
+        }
+        applyLanguage(activeLangCode);
+    }
+
     function ngnToCountryAmount(ngnAmount, countryName) {
         const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
         const usdValue = ngnAmount / NGN_PER_USD;
         return usdValue * cfg.rate;
-    }
-
-    // Per-second increment in the selected country's currency, derived from ₦6.633/sec
-    function getIncrementPerSecInCountry(countryName) {
-        return ngnToCountryAmount(INCREMENT_PER_SEC_NGN, countryName);
     }
 
     function formatInCountryCurrency(ngnAmount, countryName) {
@@ -644,12 +995,12 @@
     function updateCurrencyLabels() {
         const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
         const cfg = getCountryConfig(countryName);
-        document.getElementById('incomeLabel').innerText = `Monthly Income (${cfg.symbol})`;
         document.getElementById('incomeCurrencyBadge').innerText = cfg.symbol;
         document.getElementById('withdrawAmountLabel').innerText = `Withdrawal Amount (${cfg.symbol})`;
         document.getElementById('withdrawCurrencyBadge').innerText = cfg.symbol;
         document.getElementById('bonusDisplay').innerText = formatInCountryCurrency(BONUS_AMOUNT_NGN, countryName);
         document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
+        applyLanguage(activeLangCode);
     }
 
     function handleCountryChange() {
@@ -657,6 +1008,7 @@
         if (countryName) {
             localStorage.setItem(STORAGE_KEY_COUNTRY, countryName);
         }
+        updatePhoneFieldForCountry(countryName || "United States", true);
         updateCurrencyLabels();
     }
 
@@ -680,6 +1032,9 @@
         const savedCountry = localStorage.getItem(STORAGE_KEY_COUNTRY);
         if (savedCountry) {
             countrySelect.value = savedCountry;
+            updatePhoneFieldForCountry(savedCountry, false);
+        } else {
+            updatePhoneFieldForCountry("United States", false);
         }
 
         try {
@@ -699,6 +1054,7 @@
         calculateStoredBalance();
         updateCurrencyLabels();
         restoreUserStep();
+        openBrowserLanguagePopup();
     });
 
     function setScreenStep(stepName) {
@@ -752,17 +1108,26 @@
         const country = document.getElementById('regCountry').value;
         const occupation = document.getElementById('regOccupation').value.trim();
         const income = document.getElementById('regIncome').value.trim();
-        const mobile = document.getElementById('regMobile').value.trim();
+        const mobileDigits = document.getElementById('regMobile').value.replace(/\D/g, '');
         const err = document.getElementById('regError');
 
-        if(!name || !age || !selectedGenderVal || !state || !country || !occupation || !income || !mobile) {
+        if(!name || !age || !selectedGenderVal || !state || !country || !occupation || !income || !mobileDigits) {
             err.innerText = "Please fill in all required fields and select your age and gender.";
             err.style.display = 'block';
             return;
         }
 
+        const cfg = getCountryConfig(country);
+        if (mobileDigits.length !== cfg.phoneLen) {
+            err.innerText = `Please enter a valid ${cfg.phoneLen}-digit phone number for ${country} (${cfg.dial}).`;
+            err.style.display = 'block';
+            return;
+        }
+
+        err.style.display = 'none';
         localStorage.setItem('user_profile_name', name);
         localStorage.setItem(STORAGE_KEY_COUNTRY, country);
+        localStorage.setItem('user_full_phone', `${cfg.dial}${mobileDigits}`);
         updateCurrencyLabels();
         setScreenStep('service');
     }
