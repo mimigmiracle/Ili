@@ -51,7 +51,7 @@
             background: transparent;
             border: none;
             box-shadow: none;
-            padding: 14px 8px 14px 0;
+            padding: 14px 0 14px 8px;
             flex: 1;
             min-width: 0;
         }
@@ -59,7 +59,7 @@
             border: none;
             box-shadow: none;
         }
-        .currency-suffix-badge {
+        .currency-prefix-badge {
             font-size: 15px;
             font-weight: 800;
             color: var(--accent-blue);
@@ -176,8 +176,8 @@
         <div class="input-group">
             <label id="incomeLabel">Monthly Income ($)</label>
             <div class="currency-input-box">
+                <span class="currency-prefix-badge" id="incomeCurrencyBadge">$</span>
                 <input type="text" id="regIncome" placeholder="how much do you make monthly" inputmode="numeric" oninput="formatCommaInput(this)">
-                <span class="currency-suffix-badge" id="incomeCurrencyBadge">$</span>
             </div>
         </div>
         <div class="input-group">
@@ -370,8 +370,8 @@
             <div class="input-group">
                 <label id="withdrawAmountLabel">Withdrawal Amount ($)</label>
                 <div class="currency-input-box">
+                    <span class="currency-prefix-badge" id="withdrawCurrencyBadge">$</span>
                     <input type="text" id="withdrawAmountInput" inputmode="numeric" oninput="formatCommaInput(this)">
-                    <span class="currency-suffix-badge" id="withdrawCurrencyBadge">$</span>
                 </div>
             </div>
 
@@ -384,17 +384,22 @@
 </div>
 
 <script>
-    const STORAGE_KEY_STEP = "vault_registration_step_v7";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v7";
-    const STORAGE_KEY_BALANCE_USD = "vault_balance_usd_v7";
-    const STORAGE_KEY_TIME = "vault_last_time_v7";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v7";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v7";
+    const STORAGE_KEY_STEP = "vault_registration_step_v8";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v8";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v8";
+    const STORAGE_KEY_TIME = "vault_last_time_v8";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v8";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v8";
 
-    const BASE_BALANCE_USD = 12700.00;
-    const BONUS_AMOUNT_USD = 4072.00;
-    const INCREMENT_PER_SEC_USD = 66.33;
+    // Naira is the base reference currency:
+    // - Per-second accumulation: ₦6.633 every second
+    // - Base balance & welcome bonus derived in NGN so any country converts cleanly
+    const NGN_PER_USD = 1650;
+    const INCREMENT_PER_SEC_NGN = 6.633;
+    const BASE_BALANCE_NGN = 12700.00 * NGN_PER_USD;
+    const BONUS_AMOUNT_NGN = 4072.00 * NGN_PER_USD;
 
+    // Country list with currency symbol & rate relative to 1 USD (and converted per-second rate from ₦6.633/sec)
     const COUNTRIES_DATA = [
         { name: "Afghanistan", symbol: "؋", rate: 71 },
         { name: "Albania", symbol: "L", rate: 95 },
@@ -521,7 +526,7 @@
         { name: "New Zealand", symbol: "NZ$", rate: 1.69 },
         { name: "Nicaragua", symbol: "C$", rate: 36.8 },
         { name: "Niger", symbol: "CFA", rate: 605 },
-        { name: "Nigeria", symbol: "₦", rate: 1650 },
+        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD },
         { name: "North Korea", symbol: "₩", rate: 900 },
         { name: "North Macedonia", symbol: "ден", rate: 56.5 },
         { name: "Norway", symbol: "kr", rate: 11.1 },
@@ -593,7 +598,7 @@
         { name: "Zimbabwe", symbol: "$", rate: 25 }
     ];
 
-    let currentBalanceUsd = BASE_BALANCE_USD;
+    let currentBalanceNgn = BASE_BALANCE_NGN;
     let tickerInterval = null;
     let pictureUploaded = false;
     let selectedPriorities = [];
@@ -618,9 +623,21 @@
         return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1 };
     }
 
-    function formatInCountryCurrency(usdAmount, countryName) {
+    // Converts a NGN amount into the selected country's currency
+    function ngnToCountryAmount(ngnAmount, countryName) {
         const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
-        const converted = usdAmount * cfg.rate;
+        const usdValue = ngnAmount / NGN_PER_USD;
+        return usdValue * cfg.rate;
+    }
+
+    // Per-second increment in the selected country's currency, derived from ₦6.633/sec
+    function getIncrementPerSecInCountry(countryName) {
+        return ngnToCountryAmount(INCREMENT_PER_SEC_NGN, countryName);
+    }
+
+    function formatInCountryCurrency(ngnAmount, countryName) {
+        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
+        const converted = ngnToCountryAmount(ngnAmount, countryName);
         return cfg.symbol + converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -631,8 +648,8 @@
         document.getElementById('incomeCurrencyBadge').innerText = cfg.symbol;
         document.getElementById('withdrawAmountLabel').innerText = `Withdrawal Amount (${cfg.symbol})`;
         document.getElementById('withdrawCurrencyBadge').innerText = cfg.symbol;
-        document.getElementById('bonusDisplay').innerText = formatInCountryCurrency(BONUS_AMOUNT_USD, countryName);
-        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
+        document.getElementById('bonusDisplay').innerText = formatInCountryCurrency(BONUS_AMOUNT_NGN, countryName);
+        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
     }
 
     function handleCountryChange() {
@@ -679,6 +696,7 @@
             selectedPriorities = [];
         }
 
+        calculateStoredBalance();
         updateCurrencyLabels();
         restoreUserStep();
     });
@@ -695,9 +713,9 @@
             document.getElementById('dashScreen').classList.add('active');
             const savedName = localStorage.getItem('user_profile_name') || 'User';
             document.getElementById('dashUserBadge').innerText = "ID: " + savedName;
+            calculateStoredBalance();
             updateCurrencyLabels();
             checkBonusState();
-            calculateStoredBalance();
             startTicker();
         }
     }
@@ -807,43 +825,43 @@
     function claimWelcomeBonus() {
         const bonusClaimed = localStorage.getItem(STORAGE_KEY_BONUS_CLAIMED);
         if(bonusClaimed !== 'true') {
-            currentBalanceUsd += BONUS_AMOUNT_USD;
+            currentBalanceNgn += BONUS_AMOUNT_NGN;
             localStorage.setItem(STORAGE_KEY_BONUS_CLAIMED, 'true');
             saveBalanceState();
             document.getElementById('welcomeBonusBox').style.display = 'none';
             const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
-            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
+            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
         }
     }
 
-    // Ticker & Balance Logic
+    // Ticker & Balance Logic (anchored to ₦6.633 per second in NGN, converted to selected country currency)
     function calculateStoredBalance() {
-        const savedBal = localStorage.getItem(STORAGE_KEY_BALANCE_USD);
+        const savedBal = localStorage.getItem(STORAGE_KEY_BALANCE_NGN);
         const savedTime = localStorage.getItem(STORAGE_KEY_TIME);
         
         if(savedBal && savedTime) {
             const elapsed = (Date.now() - parseInt(savedTime)) / 1000;
             if(elapsed > 0) {
-                currentBalanceUsd = parseFloat(savedBal) + (elapsed * INCREMENT_PER_SEC_USD);
+                currentBalanceNgn = parseFloat(savedBal) + (elapsed * INCREMENT_PER_SEC_NGN);
             } else {
-                currentBalanceUsd = parseFloat(savedBal);
+                currentBalanceNgn = parseFloat(savedBal);
             }
         } else {
-            currentBalanceUsd = BASE_BALANCE_USD;
+            currentBalanceNgn = BASE_BALANCE_NGN;
         }
     }
 
     function saveBalanceState() {
-        localStorage.setItem(STORAGE_KEY_BALANCE_USD, currentBalanceUsd);
+        localStorage.setItem(STORAGE_KEY_BALANCE_NGN, currentBalanceNgn);
         localStorage.setItem(STORAGE_KEY_TIME, Date.now());
     }
 
     function startTicker() {
         if(tickerInterval) clearInterval(tickerInterval);
         tickerInterval = setInterval(() => {
-            currentBalanceUsd += INCREMENT_PER_SEC_USD;
+            currentBalanceNgn += INCREMENT_PER_SEC_NGN;
             const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
-            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
+            document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
             saveBalanceState();
         }, 1000);
     }
@@ -911,17 +929,17 @@
 
         const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
         const cfg = getCountryConfig(countryName);
-        const amountInUsd = enteredAmount / cfg.rate;
+        const amountInNgn = (enteredAmount / cfg.rate) * NGN_PER_USD;
 
-        if(!enteredAmount || isNaN(enteredAmount) || enteredAmount <= 0 || amountInUsd > currentBalanceUsd) {
+        if(!enteredAmount || isNaN(enteredAmount) || enteredAmount <= 0 || amountInNgn > currentBalanceNgn) {
             errBox.innerText = "Invalid withdrawal amount or insufficient funds.";
             errBox.style.display = 'block';
             return;
         }
 
-        currentBalanceUsd -= amountInUsd;
+        currentBalanceNgn -= amountInNgn;
         saveBalanceState();
-        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceUsd, countryName);
+        document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
         successBox.style.display = 'block';
         setTimeout(() => { closeWithdrawModal(); }, 3000);
     }
