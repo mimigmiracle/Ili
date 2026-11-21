@@ -149,22 +149,16 @@
 
     <!-- STEP 2: SERVICE REQUEST -->
     <div id="screenService" class="screen">
-        <h2 style="font-size: 20px; margin-bottom: 4px;">Service Inquiry</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">WHICH OF THIS DO YOU WANT MOSTLY?? (You can select one or multiple options)</p>
+        <h2 style="font-size: 20px; margin-bottom: 4px;">WHICH OF THIS DO YOU WANT MOSTLY??</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Select one or more options below.</p>
 
         <div class="input-group">
-            <label>Select your priorities</label>
             <div class="multi-select-grid" id="priorityOptions">
                 <div class="multi-option-btn" data-value="MONEY🔺" onclick="togglePriorityOption(this)">MONEY🔺</div>
                 <div class="multi-option-btn" data-value="FAME🔺" onclick="togglePriorityOption(this)">FAME🔺</div>
                 <div class="multi-option-btn" data-value="POWER🔺" onclick="togglePriorityOption(this)">POWER🔺</div>
                 <div class="multi-option-btn" data-value="PROTECTION🔺" onclick="togglePriorityOption(this)">PROTECTION🔺</div>
             </div>
-        </div>
-
-        <div class="input-group">
-            <label>Describe your request</label>
-            <textarea id="serviceRequestText" rows="4" placeholder="Explain what you want us to offer you..."></textarea>
         </div>
 
         <p id="serviceError" class="error-text" style="margin-bottom: 10px;"></p>
@@ -694,15 +688,9 @@
     }
 
     function submitServiceRequest() {
-        const req = document.getElementById('serviceRequestText').value.trim();
         const err = document.getElementById('serviceError');
         if(selectedPriorities.length === 0) {
             err.innerText = "Please select at least one option from WHICH OF THIS DO YOU WANT MOSTLY??";
-            err.style.display = 'block';
-            return;
-        }
-        if(!req) {
-            err.innerText = "Please describe what you want us to offer you.";
             err.style.display = 'block';
             return;
         }
