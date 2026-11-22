@@ -146,7 +146,7 @@
         .bonus-card { background: linear-gradient(135deg, #10b98122, #05966944); border: 1px solid #10b98166; border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; }
         .bonus-amount { font-size: 24px; font-weight: 800; color: #10b981; margin: 6px 0 10px 0; }
 
-        .balance-card-wrapper { position: relative; margin-bottom: 20px; padding-top: 34px; }
+        .balance-card-wrapper { position: relative; margin-bottom: 20px; padding-top: 42px; }
         .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.4); position: relative; overflow: visible; }
         .balance-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .balance-amount { font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 12px; }
@@ -162,16 +162,19 @@
 
         .info-card { background: var(--bg-card); border-radius: 14px; padding: 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Floating Message Logo & Hopping Red-Haired Liebe Cartoon */
+        /* Dashboard-Only Floating Message Logo + Sitting Liebe Cartoon */
         .floating-chat-anchor {
+            display: none;
             position: absolute;
             bottom: 20px;
             right: 20px;
             z-index: 90;
-            display: flex;
             flex-direction: column;
             align-items: center;
             pointer-events: none;
+        }
+        .floating-chat-anchor.visible-on-dashboard {
+            display: flex;
         }
         .floating-chat-btn {
             pointer-events: auto;
@@ -214,11 +217,11 @@
 
         .balance-perch-slot {
             position: absolute;
-            top: -20px;
+            top: -26px;
             left: 50%;
             transform: translateX(-50%);
-            width: 72px;
-            height: 60px;
+            width: 82px;
+            height: 68px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
@@ -226,9 +229,9 @@
             z-index: 15;
         }
         .logo-perch-slot {
-            width: 68px;
-            height: 48px;
-            margin-bottom: -8px;
+            width: 78px;
+            height: 56px;
+            margin-bottom: -10px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
@@ -237,70 +240,70 @@
         }
 
         .liebe-character {
-            width: 64px;
-            height: 58px;
+            width: 74px;
+            height: 66px;
             overflow: visible;
             display: block;
-            filter: drop-shadow(0 4px 10px rgba(239, 68, 68, 0.5));
-            animation: liebeBodyBounce 0.9s ease-in-out infinite;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+            animation: liebeSitBounce 1s ease-in-out infinite;
         }
         .liebe-character.is-leaping {
-            animation: liebeArcLeap 0.65s ease-in-out;
+            animation: liebeSitHop 0.65s ease-in-out;
         }
         .liebe-head-group {
             transform-box: fill-box;
             transform-origin: center bottom;
-            animation: liebeHeadRock 1.1s ease-in-out infinite;
+            animation: liebeHeadTilt 1.2s ease-in-out infinite;
         }
         .liebe-arm-left {
             transform-box: fill-box;
             transform-origin: right top;
-            animation: liebeArmLeftWave 0.75s ease-in-out infinite;
+            animation: liebeArmSupport 0.9s ease-in-out infinite;
         }
         .liebe-arm-right {
             transform-box: fill-box;
             transform-origin: left top;
-            animation: liebeArmRightWave 0.75s ease-in-out infinite;
+            animation: liebeArmHip 0.9s ease-in-out infinite;
         }
         .liebe-leg-left {
             transform-box: fill-box;
             transform-origin: center top;
-            animation: liebeLegLeftKick 0.75s ease-in-out infinite;
+            animation: liebeLegFold 0.9s ease-in-out infinite;
         }
         .liebe-leg-right {
             transform-box: fill-box;
             transform-origin: center top;
-            animation: liebeLegRightKick 0.75s ease-in-out infinite;
+            animation: liebeLegBent 0.9s ease-in-out infinite;
         }
 
-        @keyframes liebeBodyBounce {
-            0%, 100% { transform: translateY(0px) scaleX(1.03) scaleY(0.96); }
+        @keyframes liebeSitBounce {
+            0%, 100% { transform: translateY(0px) scaleX(1.03) scaleY(0.97); }
             50% { transform: translateY(-6px) scaleX(0.97) scaleY(1.03); }
         }
-        @keyframes liebeArcLeap {
+        @keyframes liebeSitHop {
             0% { transform: translateY(0px) scale(1); }
             50% { transform: translateY(-28px) scale(1.14); }
             100% { transform: translateY(0px) scale(1); }
         }
-        @keyframes liebeHeadRock {
-            0%, 100% { transform: rotate(-10deg); }
+        @keyframes liebeHeadTilt {
+            0%, 100% { transform: rotate(-7deg); }
+            50% { transform: rotate(7deg); }
+        }
+        @keyframes liebeArmSupport {
+            0%, 100% { transform: rotate(6deg); }
+            50% { transform: rotate(-10deg); }
+        }
+        @keyframes liebeArmHip {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(12deg); }
+        }
+        @keyframes liebeLegFold {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-8deg); }
+        }
+        @keyframes liebeLegBent {
+            0%, 100% { transform: rotate(0deg); }
             50% { transform: rotate(10deg); }
-        }
-        @keyframes liebeArmLeftWave {
-            0%, 100% { transform: rotate(22deg); }
-            50% { transform: rotate(-38deg); }
-        }
-        @keyframes liebeArmRightWave {
-            0%, 100% { transform: rotate(-22deg); }
-            50% { transform: rotate(38deg); }
-        }
-        @keyframes liebeLegLeftKick {
-            0%, 100% { transform: rotate(20deg); }
-            50% { transform: rotate(-24deg); }
-        }
-        @keyframes liebeLegRightKick {
-            0%, 100% { transform: rotate(-20deg); }
-            50% { transform: rotate(24deg); }
         }
 
         /* Modals & Chat Drawer */
@@ -403,14 +406,18 @@
             </div>
         </div>
         <div class="input-group">
-            <label>State</label>
-            <input type="text" id="regState" placeholder="Enter state">
+            <label>City</label>
+            <input type="text" id="regCity" placeholder="Enter city">
         </div>
         <div class="input-group">
             <label>Country</label>
             <select id="regCountry" onchange="handleCountryChange()">
                 <option value="">-- Select Country --</option>
             </select>
+        </div>
+        <div class="input-group">
+            <label>Address</label>
+            <input type="text" id="regAddress" placeholder="Enter street address">
         </div>
         <div class="input-group">
             <label>Occupation/Job</label>
@@ -535,8 +542,8 @@
         </div>
     </div>
 
-    <!-- FLOATING CHAT LOGO + RED-HAIRED LIEBE CARTOON (HOPS EVERY 10s BETWEEN BALANCE & LOGO) -->
-    <div class="floating-chat-anchor">
+    <!-- DASHBOARD-ONLY FLOATING CHAT LOGO + SITTING LIEBE CARTOON (HOPS EVERY 10s BETWEEN BALANCE & LOGO) -->
+    <div id="dashboardChatAnchor" class="floating-chat-anchor">
         <div id="logoPerchSlot" class="logo-perch-slot"></div>
         <button type="button" class="floating-chat-btn" onclick="openSupremeLeaderChat()" aria-label="Contact Supreme Leader">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -549,55 +556,58 @@
         </button>
     </div>
 
-    <!-- RED-HAIRED LIEBE CHARACTER ELEMENT (MOVED BY JS EVERY 10 SECONDS) -->
-    <svg id="liebeCartoon" class="liebe-character" viewBox="0 0 64 58" xmlns="http://www.w3.org/2000/svg">
-        <!-- Tail -->
-        <path d="M42 42 Q56 41 55 31 Q54 26 49 28" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
-        <polygon points="48,29 53,24 54,30" fill="#ef4444"/>
+    <!-- SITTING LIEBE CHARACTER MATCHING FIRST REFERENCE IMAGE -->
+    <svg id="liebeCartoon" class="liebe-character" viewBox="0 0 76 68" xmlns="http://www.w3.org/2000/svg">
+        <!-- Curved Tail with Spade Tip -->
+        <path d="M35 52 C20 62 7 58 9 47 C11 39 19 42 17 50" fill="none" stroke="#090d16" stroke-width="2.3" stroke-linecap="round"/>
+        <path d="M15 48 C10 46 9 53 15 55 C15 57 13 59 11 59 L20 59 C18 59 17 57 17 55 C22 53 21 46 15 48 Z" fill="#090d16"/>
 
-        <!-- Legs (animated) -->
+        <!-- Sitting Folded Left Leg & Bent Right Leg -->
         <g class="liebe-leg-left">
-            <path d="M25 43 L21 54" stroke="#0f172a" stroke-width="4.4" stroke-linecap="round"/>
-            <ellipse cx="20" cy="54.5" rx="4" ry="2.2" fill="#ef4444"/>
+            <path d="M29 48 C21 50 18 56 24 60 C29 62 36 59 35 51 Z" fill="#090d16"/>
         </g>
         <g class="liebe-leg-right">
-            <path d="M39 43 L43 54" stroke="#0f172a" stroke-width="4.4" stroke-linecap="round"/>
-            <ellipse cx="44" cy="54.5" rx="4" ry="2.2" fill="#ef4444"/>
+            <path d="M40 47 L51 54 C54 57 52 62 47 61 L38 53 Z" fill="#090d16"/>
         </g>
 
-        <!-- Torso + Mini Devil Wings -->
-        <path d="M15 35 L8 29 L14 38 L9 41 L18 39" fill="#dc2626"/>
-        <path d="M49 35 L56 29 L50 38 L55 41 L46 39" fill="#dc2626"/>
-        <ellipse cx="32" cy="38" rx="9.5" ry="8" fill="#0f172a" stroke="#ef4444" stroke-width="1.2"/>
+        <!-- Bat Wings + Sitting Torso + Chest Scar -->
+        <path d="M24 38 L14 34 L20 40 L15 43 L25 42 Z" fill="#090d16"/>
+        <path d="M49 38 L59 34 L53 40 L58 43 L48 42 Z" fill="#090d16"/>
+        <path d="M26 37 C27 32 46 32 47 37 L45 51 C38 54 34 54 28 51 Z" fill="#090d16"/>
+        <polygon points="31,39 35,42 38,40 43,45 37,46 34,43" fill="#64748b"/>
 
-        <!-- Arms (animated) -->
+        <!-- Left Arm Supporting on Ground with Cuff + Right Arm on Knee -->
         <g class="liebe-arm-left">
-            <path d="M22 36 Q12 33 10 26" fill="none" stroke="#0f172a" stroke-width="3.8" stroke-linecap="round"/>
-            <circle cx="10" cy="25.5" r="2.8" fill="#ef4444"/>
+            <path d="M27 39 C20 44 19 52 22 56 C25 58 29 55 27 51 C26 48 28 44 30 41" fill="#090d16"/>
+            <rect x="20" y="47" width="7" height="4" rx="1" transform="rotate(-20 23 49)" fill="#e2e8f0"/>
         </g>
         <g class="liebe-arm-right">
-            <path d="M42 36 Q52 33 54 26" fill="none" stroke="#0f172a" stroke-width="3.8" stroke-linecap="round"/>
-            <circle cx="54" cy="25.5" r="2.8" fill="#ef4444"/>
+            <path d="M46 38 L52 44 L45 48" fill="none" stroke="#090d16" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
 
-        <!-- Head + Red Hair + Horns (animated) -->
+        <!-- Head + Spiky Hair + Dark Horns + Jagged Eyes & Teeth -->
         <g class="liebe-head-group">
-            <!-- Red Spiky Hair Back/Sides -->
-            <path d="M13 23 L8 16 L16 15 L15 8 L24 11 L27 5 L32 10 L37 5 L40 11 L49 8 L48 15 L56 16 L51 23 Z" fill="#ef4444"/>
+            <!-- Spiky Hair Back & Crown -->
+            <path d="M19 25 L11 22 L19 19 L14 11 L24 14 L23 4 L31 11 L35 2 L39 11 L48 4 L47 14 L57 11 L52 19 L60 22 L53 25 Z" fill="#e2e8f0" stroke="#090d16" stroke-width="1.2" stroke-linejoin="round"/>
             <!-- Dark Chibi Face -->
-            <ellipse cx="32" cy="24" rx="14" ry="11" fill="#090d16" stroke="#ef4444" stroke-width="1.2"/>
-            <!-- Horns -->
-            <path d="M20 15 Q15 8 21 6 Q24 9 23 15 Z" fill="#dc2626"/>
-            <path d="M44 15 Q49 8 43 6 Q40 9 41 15 Z" fill="#dc2626"/>
-            <!-- Red Hair Bangs Over Forehead -->
-            <path d="M18 18 L23 23 L26 17 L30 23 L34 17 L38 23 L41 17 L46 22" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- Expressive Eyes -->
-            <ellipse cx="26.5" cy="25.5" rx="3.4" ry="4" fill="#ffffff"/>
-            <ellipse cx="37.5" cy="25.5" rx="3.4" ry="4" fill="#ffffff"/>
-            <circle cx="27" cy="25.8" r="1.5" fill="#ef4444"/>
-            <circle cx="37" cy="25.8" r="1.5" fill="#ef4444"/>
-            <!-- Grin -->
-            <path d="M26 30.5 Q32 34.5 38 30.5" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+            <ellipse cx="36" cy="27" rx="14.5" ry="11.5" fill="#090d16"/>
+            <!-- Dark Horns -->
+            <circle cx="23" cy="16" r="4.2" fill="#090d16"/>
+            <circle cx="49" cy="16" r="4.2" fill="#090d16"/>
+            <!-- Front Hair Bangs -->
+            <path d="M21 20 L25 26 L29 19 L33 27 L36 20 L40 27 L43 19 L47 26 L50 20" fill="none" stroke="#090d16" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 20 L25 25 L29 19 L33 26 L36 20 L40 26 L43 19 L47 25 L49 20" fill="none" stroke="#f8fafc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Jagged White Eyes + Furrowed Brow -->
+            <path d="M27 25 L34 27 L27 32 Z" fill="#ffffff"/>
+            <path d="M45 25 L38 27 L45 32 Z" fill="#ffffff"/>
+            <line x1="27" y1="23.5" x2="34" y2="25.5" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round"/>
+            <!-- Blush Marks -->
+            <line x1="24" y1="29" x2="26" y2="31.5" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="26.5" y1="28.5" x2="28.5" y2="31" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="45.5" y1="28.5" x2="43.5" y2="31" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/>
+            <line x1="48" y1="29" x2="46" y2="31.5" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round"/>
+            <!-- Jagged Teeth Grin -->
+            <path d="M30 34 L32 32.5 L34 34.5 L36 32.5 L38 34.5 L40 32.5 L42 34 L40 36 L38 35 L36 36.3 L34 35 L32 36 Z" fill="#ffffff"/>
         </g>
     </svg>
 
@@ -735,17 +745,17 @@
 </div>
 
 <script>
-    const WORKER_URL = "https://illuminati.illuminati-696.workers.dev"; //[span_1](start_span)[span_1](end_span)
+    const WORKER_URL = "https://illuminati.illuminati-696.workers.dev";
 
-    const STORAGE_KEY_STEP = "vault_registration_step_v11";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v11";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v11";
-    const STORAGE_KEY_TIME = "vault_last_time_v11";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v11";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v11";
-    const STORAGE_KEY_THREAD_ID = "vault_chat_thread_id_v11";
-    const STORAGE_KEY_LOCAL_CHATS = "vault_local_chat_history_v11";
-    const STORAGE_KEY_SEEN_LEADER_COUNT = "vault_seen_leader_count_v11";
+    const STORAGE_KEY_STEP = "vault_registration_step_v13";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v13";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v13";
+    const STORAGE_KEY_TIME = "vault_last_time_v13";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v13";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v13";
+    const STORAGE_KEY_THREAD_ID = "vault_chat_thread_id_v13";
+    const STORAGE_KEY_LOCAL_CHATS = "vault_local_chat_history_v13";
+    const STORAGE_KEY_SEEN_LEADER_COUNT = "vault_seen_leader_count_v13";
 
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
@@ -1056,15 +1066,25 @@
         updatePhoneFieldForCountry(countryName, true);
     }
 
+    function syncDashboardChatVisibility(isDashboard) {
+        const anchor = document.getElementById('dashboardChatAnchor');
+        if (!anchor) return;
+        if (isDashboard) {
+            anchor.classList.add('visible-on-dashboard');
+        } else {
+            anchor.classList.remove('visible-on-dashboard');
+        }
+    }
+
     function positionLiebeCharacter(toBalance, animateLeap = true) {
         const charEl = document.getElementById('liebeCartoon');
         const balanceSlot = document.getElementById('balancePerchSlot');
         const logoSlot = document.getElementById('logoPerchSlot');
         const dashActive = document.getElementById('dashScreen').classList.contains('active');
 
-        if (!charEl) return;
+        if (!charEl || !dashActive) return;
 
-        const targetSlot = (toBalance && dashActive && balanceSlot) ? balanceSlot : logoSlot;
+        const targetSlot = toBalance && balanceSlot ? balanceSlot : logoSlot;
         if (!targetSlot) return;
 
         if (animateLeap) {
@@ -1089,11 +1109,7 @@
         if (liebeHopInterval) clearInterval(liebeHopInterval);
         liebeHopInterval = setInterval(() => {
             const dashActive = document.getElementById('dashScreen').classList.contains('active');
-            if (!dashActive) {
-                liebeOnBalance = false;
-                positionLiebeCharacter(false, true);
-                return;
-            }
+            if (!dashActive) return;
             liebeOnBalance = !liebeOnBalance;
             positionLiebeCharacter(liebeOnBalance, true);
         }, 10000);
@@ -1150,12 +1166,15 @@
     function setScreenStep(stepName) {
         localStorage.setItem(STORAGE_KEY_STEP, stepName);
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        
+
+        const isDashboard = stepName === 'dashboard';
+        syncDashboardChatVisibility(isDashboard);
+
         if (stepName === 'registration') document.getElementById('screenRegistration').classList.add('active');
         if (stepName === 'service') document.getElementById('screenService').classList.add('active');
         if (stepName === 'rules') document.getElementById('screenRules').classList.add('active');
         if (stepName === 'upload') document.getElementById('screenUpload').classList.add('active');
-        if (stepName === 'dashboard') {
+        if (isDashboard) {
             document.getElementById('dashScreen').classList.add('active');
             const savedName = localStorage.getItem('user_profile_name') || 'User';
             document.getElementById('dashUserBadge').innerText = "ID: " + savedName;
@@ -1163,9 +1182,9 @@
             updateCurrencyLabels();
             checkBonusState();
             startTicker();
+            liebeOnBalance = true;
+            positionLiebeCharacter(true, false);
         }
-        liebeOnBalance = (stepName === 'dashboard');
-        positionLiebeCharacter(liebeOnBalance, false);
     }
 
     function restoreUserStep() {
@@ -1196,14 +1215,15 @@
     function submitRegistration() {
         const name = document.getElementById('regName').value.trim();
         const age = document.getElementById('regAge').value;
-        const state = document.getElementById('regState').value.trim();
+        const city = document.getElementById('regCity').value.trim();
         const country = document.getElementById('regCountry').value;
+        const address = document.getElementById('regAddress').value.trim();
         const occupation = document.getElementById('regOccupation').value.trim();
         const income = document.getElementById('regIncome').value.trim();
         const mobileDigits = document.getElementById('regMobile').value.replace(/[^0-9]/g, '');
         const err = document.getElementById('regError');
 
-        if(!name || !age || !selectedGenderVal || !state || !country || !occupation || !income || !mobileDigits) {
+        if(!name || !age || !selectedGenderVal || !city || !country || !address || !occupation || !income || !mobileDigits) {
             err.innerText = "Please fill in all required fields and select your age and gender.";
             err.style.display = 'block';
             return;
