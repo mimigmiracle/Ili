@@ -122,6 +122,13 @@
             box-shadow: 0 0 0 3px var(--gold-glow);
         }
 
+        .country-search-input {
+            margin-bottom: 8px;
+            padding: 11px 14px;
+            font-size: 14px;
+            background: rgba(23, 27, 39, 0.95);
+        }
+
         .currency-input-box {
             display: flex;
             align-items: center;
@@ -698,7 +705,7 @@
                 <div style="font-size: 32px; margin-bottom: 10px;">🔯🔺</div>
                 <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">THE ILLUMINATI VAULT</h2>
                 <p style="color: var(--text-muted); font-size: 13px; line-height: 1.55;">
-                    Select <strong>Sign Up</strong> if you don't have an account yet, or <strong>Log In</strong> with your phone number and numeric password if you already have one.
+                    Select <strong>Sign Up</strong> if you don't have an account yet, or <strong>Log In</strong> with your country code, phone number, and 4–8 digit password if you already have one.
                 </p>
             </div>
 
@@ -709,22 +716,34 @@
         </div>
     </div>
 
-    <!-- DEDICATED LOG IN SCREEN (PHONE NUMBER + NUMBERS-ONLY PASSWORD) -->
+    <!-- DEDICATED LOG IN SCREEN (COUNTRY CODE SEARCH + SELECT + PHONE LIMIT + 4-8 DIGIT PASSWORD) -->
     <div id="screenLogin" class="screen">
         <h2 style="font-size: 21px; font-weight: 800; margin-bottom: 4px;">Member Log In</h2>
         <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px;">
-            Enter your registered phone number and your numbers-only password to open your dashboard.
+            Search and select your country code first, enter your phone number within the required digit limit, and enter your 4–8 digit password.
         </p>
 
         <div class="input-group">
-            <label>Phone Number</label>
-            <input type="text" id="loginScreenPhone" placeholder="Enter your phone number (e.g. +2348012345678)" inputmode="tel">
+            <label>Search & Select Country Code</label>
+            <input type="text" id="loginCountrySearch" class="country-search-input" placeholder="Search country or code (e.g. Nigeria, +234, US)..." oninput="filterLoginCountries()">
+            <select id="loginCountrySelect" onchange="handleLoginCountryChange()">
+                <option value="">-- Select Country Code --</option>
+            </select>
         </div>
 
         <div class="input-group">
-            <label>Password (Numbers Only)</label>
-            <input type="password" id="loginScreenPassword" placeholder="Numbers only (0-9)" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumbersOnly(this)">
-            <div class="field-hint">Only numbers are allowed—letters and symbols are automatically removed.</div>
+            <label id="loginMobileLabel">Phone Number</label>
+            <div class="phone-input-box">
+                <span class="phone-dial-badge" id="loginPhoneDialBadge">+234</span>
+                <input type="text" id="loginScreenPhone" placeholder="Enter 9-digit number" inputmode="numeric" oninput="sanitizeLoginPhoneInput(this)">
+            </div>
+            <div class="field-hint" id="loginPhoneLengthHint">Required format: 9 digits after +234.</div>
+        </div>
+
+        <div class="input-group">
+            <label>Password (4–8 Numbers Only)</label>
+            <input type="password" id="loginScreenPassword" placeholder="4 to 8 numbers (0-9)" minlength="4" maxlength="8" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumericPassword(this)">
+            <div class="field-hint">Numbers only, minimum 4 and maximum 8 digits.</div>
         </div>
 
         <p id="loginScreenError" class="error-text" style="margin-bottom: 10px;"></p>
@@ -776,14 +795,14 @@
             <label id="mobileLabel">Mobile Number</label>
             <div class="phone-input-box">
                 <span class="phone-dial-badge" id="phoneDialBadge">+1</span>
-                <input type="text" id="regMobile" placeholder="Enter 10-digit phone number" inputmode="numeric" oninput="sanitizePhoneInput(this)">
+                <input type="text" id="regMobile" placeholder="Enter phone number" inputmode="numeric" oninput="sanitizePhoneInput(this)">
             </div>
             <div class="field-hint" id="phoneLengthHint">Select a country to see required digit length.</div>
         </div>
         <div class="input-group">
-            <label>Create Password (Numbers Only)</label>
-            <input type="password" id="regPassword" placeholder="Numbers only (e.g. 123456)" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumbersOnly(this)">
-            <div class="field-hint">Strict numbers-only password (at least 4 digits). No letters or special characters.</div>
+            <label>Create Password (4–8 Numbers Only)</label>
+            <input type="password" id="regPassword" placeholder="4 to 8 numbers (e.g. 1234)" minlength="4" maxlength="8" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumericPassword(this)">
+            <div class="field-hint">Numbers only: minimum 4 digits, maximum 8 digits. No letters or special characters.</div>
         </div>
 
         <p id="regError" class="error-text" style="margin-bottom: 10px;"></p>
@@ -859,7 +878,7 @@
         <div id="verificationNotice" class="verification-banner">⚠️ Membership under verification. Pending final approval.</div>
 
         <div id="loginCredentialsSummary" class="credentials-pill-box">
-            Login Phone: <strong id="summaryLoginPhone">—</strong> • Numeric Password: <strong id="summaryLoginPassword">—</strong>
+            Login Phone: <strong id="summaryLoginPhone">—</strong> • PIN Password (4–8 digits): <strong id="summaryLoginPassword">—</strong>
         </div>
 
         <!-- WELCOME BONUS CARD -->
@@ -1123,18 +1142,21 @@
     // Optional: set a cloud endpoint (e.g. Cloudflare Worker / Supabase) to sync phone+password accounts across separate devices automatically
     const SYNC_API_URL = "";
 
-    const STORAGE_KEY_STEP = "vault_registration_step_v18";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v18";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v18";
-    const STORAGE_KEY_TIME = "vault_last_time_v18";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v18";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v18";
-    const STORAGE_KEY_ACCOUNTS_REGISTRY = "vault_accounts_registry_v18";
+    const STORAGE_KEY_STEP = "vault_registration_step_v19";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v19";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v19";
+    const STORAGE_KEY_TIME = "vault_last_time_v19";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v19";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v19";
+    const STORAGE_KEY_ACCOUNTS_REGISTRY = "vault_accounts_registry_v19";
 
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
     const BASE_BALANCE_NGN = 12700.00 * NGN_PER_USD;
     const BONUS_AMOUNT_NGN = 4072.00 * NGN_PER_USD;
+
+    const MIN_PASSWORD_LEN = 4;
+    const MAX_PASSWORD_LEN = 8;
 
     const COUNTRIES_DATA = [
         { name: "Afghanistan", symbol: "؋", rate: 71, dial: "+93", minLen: 9, maxLen: 9 },
@@ -1262,7 +1284,7 @@
         { name: "New Zealand", symbol: "NZ$", rate: 1.69, dial: "+64", minLen: 8, maxLen: 10 },
         { name: "Nicaragua", symbol: "C$", rate: 36.8, dial: "+505", minLen: 8, maxLen: 8 },
         { name: "Niger", symbol: "CFA", rate: 605, dial: "+227", minLen: 8, maxLen: 8 },
-        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", minLen: 10, maxLen: 10 },
+        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", minLen: 9, maxLen: 9 },
         { name: "North Korea", symbol: "₩", rate: 900, dial: "+850", minLen: 8, maxLen: 10 },
         { name: "North Macedonia", symbol: "ден", rate: 56.5, dial: "+389", minLen: 8, maxLen: 8 },
         { name: "Norway", symbol: "kr", rate: 11.1, dial: "+47", minLen: 8, maxLen: 8 },
@@ -1341,8 +1363,13 @@
     let pictureUploaded = false;
     let selectedPriorities = [];
 
-    function enforceNumbersOnly(inputEl) {
-        inputEl.value = inputEl.value.replace(/[^0-9]/g, '');
+    function enforceNumericPassword(inputEl) {
+        const digitsOnly = inputEl.value.replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
+        inputEl.value = digitsOnly;
+    }
+
+    function isValidPasswordLength(pass) {
+        return /^[0-9]+$/.test(pass) && pass.length >= MIN_PASSWORD_LEN && pass.length <= MAX_PASSWORD_LEN;
     }
 
     function normalizePhoneKey(phone) {
@@ -1366,7 +1393,7 @@
     }
 
     function getCountryConfig(countryName) {
-        return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1, dial: "+1", minLen: 10, maxLen: 10 };
+        return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", minLen: 9, maxLen: 9 };
     }
 
     function getLengthRequirementText(cfg) {
@@ -1383,9 +1410,9 @@
         const labelEl = document.getElementById('mobileLabel');
 
         if (!countryName) {
-            dialBadge.innerText = "+1";
-            phoneInput.maxLength = 15;
-            phoneInput.placeholder = "Enter phone number";
+            dialBadge.innerText = "+234";
+            phoneInput.maxLength = 9;
+            phoneInput.placeholder = "Enter 9-digit number";
             labelEl.innerText = "Mobile Number";
             hintEl.innerText = "Select a country to see required digit length.";
             if (shouldResetInput) phoneInput.value = '';
@@ -1407,6 +1434,91 @@
 
     function sanitizePhoneInput(inputEl) {
         const countryName = document.getElementById('regCountry').value;
+        const cfg = getCountryConfig(countryName);
+        let digitsOnly = inputEl.value.replace(/[^0-9]/g, '');
+        if (digitsOnly.length > cfg.maxLen) {
+            digitsOnly = digitsOnly.slice(0, cfg.maxLen);
+        }
+        inputEl.value = digitsOnly;
+    }
+
+    // Login Country Code Search & Digit Limit
+    function populateLoginCountrySelect(filterText = "", preferredCountry = "Nigeria") {
+        const selectEl = document.getElementById('loginCountrySelect');
+        const query = String(filterText || "").trim().toLowerCase();
+        const previousVal = selectEl.value || preferredCountry;
+
+        const matches = COUNTRIES_DATA.filter(c => {
+            if (!query) return true;
+            const dialNoPlus = c.dial.replace(/[^0-9]/g, '');
+            return c.name.toLowerCase().includes(query) ||
+                   c.dial.toLowerCase().includes(query) ||
+                   dialNoPlus.includes(query.replace(/[^0-9]/g, '') && query.replace(/[^0-9]/g, '').length > 0 ? query.replace(/[^0-9]/g, '') : "___nonmatch___");
+        });
+
+        selectEl.innerHTML = "";
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.textContent = matches.length ? "-- Select Country Code --" : "-- No matching country --";
+        selectEl.appendChild(defaultOpt);
+
+        matches.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.name;
+            opt.textContent = `${c.name} (${c.dial})`;
+            selectEl.appendChild(opt);
+        });
+
+        if (matches.some(m => m.name === previousVal)) {
+            selectEl.value = previousVal;
+        } else if (matches.length === 1) {
+            selectEl.value = matches[0].name;
+        } else if (!query && matches.some(m => m.name === preferredCountry)) {
+            selectEl.value = preferredCountry;
+        }
+
+        handleLoginCountryChange(false);
+    }
+
+    function filterLoginCountries() {
+        const query = document.getElementById('loginCountrySearch').value;
+        populateLoginCountrySelect(query, document.getElementById('loginCountrySelect').value || "Nigeria");
+    }
+
+    function handleLoginCountryChange(shouldResetInput = true) {
+        const countryName = document.getElementById('loginCountrySelect').value;
+        const phoneInput = document.getElementById('loginScreenPhone');
+        const dialBadge = document.getElementById('loginPhoneDialBadge');
+        const hintEl = document.getElementById('loginPhoneLengthHint');
+        const labelEl = document.getElementById('loginMobileLabel');
+
+        if (!countryName) {
+            dialBadge.innerText = "+234";
+            phoneInput.maxLength = 9;
+            phoneInput.placeholder = "Enter 9-digit number";
+            labelEl.innerText = "Phone Number";
+            hintEl.innerText = "Select a country code to set the required phone number length.";
+            if (shouldResetInput) phoneInput.value = '';
+            return;
+        }
+
+        const cfg = getCountryConfig(countryName);
+        dialBadge.innerText = cfg.dial;
+        phoneInput.maxLength = cfg.maxLen;
+        phoneInput.placeholder = cfg.minLen === cfg.maxLen
+            ? `Enter ${cfg.minLen}-digit number`
+            : `Enter ${cfg.minLen}-${cfg.maxLen} digits`;
+        labelEl.innerText = `Phone Number (${cfg.dial})`;
+        hintEl.innerText = `Required limit: ${getLengthRequirementText(cfg)} (no leading 0 needed).`;
+        if (shouldResetInput) {
+            phoneInput.value = '';
+        } else {
+            sanitizeLoginPhoneInput(phoneInput);
+        }
+    }
+
+    function sanitizeLoginPhoneInput(inputEl) {
+        const countryName = document.getElementById('loginCountrySelect').value || "Nigeria";
         const cfg = getCountryConfig(countryName);
         let digitsOnly = inputEl.value.replace(/[^0-9]/g, '');
         if (digitsOnly.length > cfg.maxLen) {
@@ -1457,7 +1569,7 @@
 
     function saveAccountSnapshot() {
         const fullPhone = localStorage.getItem('user_profile_mobile') || "";
-        const password = (localStorage.getItem('user_profile_password') || "").replace(/[^0-9]/g, '');
+        const password = (localStorage.getItem('user_profile_password') || "").replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
         const key = normalizePhoneKey(fullPhone);
         if (!key || !password) return;
 
@@ -1489,7 +1601,7 @@
 
     function applyAccountSnapshot(record) {
         if (!record) return;
-        const numericPass = String(record.password || '').replace(/[^0-9]/g, '');
+        const numericPass = String(record.password || '').replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
         localStorage.setItem('user_profile_name', record.name || 'User');
         localStorage.setItem('user_profile_mobile', record.phone || '');
         localStorage.setItem('user_profile_password', numericPass);
@@ -1529,30 +1641,47 @@
 
     function goToLoginScreen() {
         document.getElementById('loginScreenError').style.display = 'none';
-        document.getElementById('loginScreenPhone').value = localStorage.getItem('user_profile_mobile') || '';
+        document.getElementById('loginCountrySearch').value = '';
+        const preferred = localStorage.getItem(STORAGE_KEY_COUNTRY) || "Nigeria";
+        populateLoginCountrySelect("", preferred);
+        document.getElementById('loginScreenPhone').value = '';
         document.getElementById('loginScreenPassword').value = '';
         setScreenStep('login');
     }
 
     async function submitLoginScreen() {
-        const rawPhone = document.getElementById('loginScreenPhone').value.trim();
+        const countryName = document.getElementById('loginCountrySelect').value;
+        const phoneInput = document.getElementById('loginScreenPhone');
+        sanitizeLoginPhoneInput(phoneInput);
+        const phoneDigits = phoneInput.value;
+
         const passwordInput = document.getElementById('loginScreenPassword');
-        enforceNumbersOnly(passwordInput);
+        enforceNumericPassword(passwordInput);
         const password = passwordInput.value;
+
         const errEl = document.getElementById('loginScreenError');
-        const key = normalizePhoneKey(rawPhone);
 
-        if (!key || !password) {
-            errEl.innerText = "Please enter your phone number and numeric password.";
+        if (!countryName) {
+            errEl.innerText = "Please select your country code first.";
             errEl.style.display = 'block';
             return;
         }
 
-        if (!/^[0-9]+$/.test(password)) {
-            errEl.innerText = "Password must contain numbers only.";
+        const cfg = getCountryConfig(countryName);
+        if (!phoneDigits || phoneDigits.length < cfg.minLen || phoneDigits.length > cfg.maxLen) {
+            errEl.innerText = `For ${countryName} (${cfg.dial}), enter ${getLengthRequirementText(cfg)}.`;
             errEl.style.display = 'block';
             return;
         }
+
+        if (!isValidPasswordLength(password)) {
+            errEl.innerText = "Password must be 4 to 8 numbers only.";
+            errEl.style.display = 'block';
+            return;
+        }
+
+        const fullPhone = `${cfg.dial}${phoneDigits}`;
+        const key = normalizePhoneKey(fullPhone);
 
         let matchedRecord = null;
         const registry = getAccountsRegistry();
@@ -1575,7 +1704,7 @@
         }
 
         if (!matchedRecord) {
-            errEl.innerText = "No account found with that phone number and numeric password.";
+            errEl.innerText = "No account found with that country code, phone number, and 4–8 digit password.";
             errEl.style.display = 'block';
             return;
         }
@@ -1687,6 +1816,8 @@
             updatePhoneFieldForCountry("", false);
         }
 
+        populateLoginCountrySelect("", savedCountry || "Nigeria");
+
         try {
             const savedPriorities = JSON.parse(localStorage.getItem(STORAGE_KEY_PRIORITIES) || '[]');
             if (Array.isArray(savedPriorities)) {
@@ -1767,20 +1898,24 @@
         const country = document.getElementById('regCountry').value;
         const occupation = document.getElementById('regOccupation').value.trim();
         const income = document.getElementById('regIncome').value.trim();
-        const mobileDigits = document.getElementById('regMobile').value.replace(/[^0-9]/g, '');
+        const mobileInput = document.getElementById('regMobile');
+        sanitizePhoneInput(mobileInput);
+        const mobileDigits = mobileInput.value;
+
         const passwordInput = document.getElementById('regPassword');
-        enforceNumbersOnly(passwordInput);
+        enforceNumericPassword(passwordInput);
         const password = passwordInput.value;
+
         const err = document.getElementById('regError');
 
         if(!name || !age || !selectedGenderVal || !country || !occupation || !income || !mobileDigits || !password) {
-            err.innerText = "Please fill in all fields, including your numbers-only password, age, and gender.";
+            err.innerText = "Please fill in all fields, including your 4–8 digit numeric password, age, and gender.";
             err.style.display = 'block';
             return;
         }
 
-        if (!/^[0-9]+$/.test(password) || password.length < 4) {
-            err.innerText = "Password must contain numbers only (at least 4 digits).";
+        if (!isValidPasswordLength(password)) {
+            err.innerText = "Password must contain numbers only: minimum 4 digits and maximum 8 digits.";
             err.style.display = 'block';
             return;
         }
