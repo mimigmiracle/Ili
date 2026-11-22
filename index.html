@@ -6,121 +6,32 @@
     <title>illuminati</title>
     <style>
         :root {
-            --bg-deep: #06070a;
-            --bg-elevated: #0e1017;
-            --bg-card: rgba(20, 23, 33, 0.88);
-            --bg-input: rgba(31, 36, 51, 0.9);
-            --gold-primary: #d4af37;
-            --gold-bright: #f3d27a;
-            --gold-dark: #9e7b1b;
-            --gold-glow: rgba(212, 175, 55, 0.28);
-            --text-main: #f5f6f8;
-            --text-muted: #98a0b3;
-            --success: #34d399;
-            --danger: #f87171;
-            --border-glass: rgba(255, 255, 255, 0.09);
-            --border-gold: rgba(212, 175, 55, 0.34);
-            --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            --bg-deep: #070d1b;
+            --bg-card: #0f1c3f;
+            --bg-input: #172a5c;
+            --accent-blue: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --accent-green: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); touch-action: manipulation; }
-        html, body {
-            height: 100vh;
-            height: 100dvh;
-            background: radial-gradient(circle at top, #17150e 0%, var(--bg-deep) 55%);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-        }
+        html, body { height: 100vh; height: 100dvh; background: var(--bg-deep); color: var(--text-main); display: flex; justify-content: center; align-items: center; overflow: hidden; position: fixed; width: 100%; }
 
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            height: 100%;
-            height: 100dvh;
-            background: linear-gradient(180deg, #0b0d13 0%, #06070a 100%);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-        @media (min-width: 500px) {
-            .app-container {
-                height: 90vh;
-                border-radius: 36px;
-                border: 1px solid var(--border-glass);
-                box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(212, 175, 55, 0.08);
-            }
-        }
+        .app-container { width: 100%; max-width: 480px; height: 100%; height: 100dvh; background: var(--bg-deep); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        @media (min-width: 500px) { .app-container { height: 90vh; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.8); } }
 
-        .screen {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-            padding: 24px 20px 118px 20px;
-            overflow-y: auto;
-            height: 100%;
-        }
+        .screen { display: none; flex: 1; flex-direction: column; padding: 24px; overflow-y: auto; height: 100%; padding-bottom: 96px; }
         .screen.active { display: flex; }
 
-        .gateway-wrap {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 14px;
-        }
-        .gateway-hero {
-            background: linear-gradient(160deg, rgba(212, 175, 55, 0.12), rgba(20, 23, 33, 0.92));
-            border: 1px solid var(--border-gold);
-            border-radius: 26px;
-            padding: 26px 20px;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .gateway-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .ios-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 18px;
-        }
-
         .input-group { width: 100%; text-align: left; margin-bottom: 14px; }
-        .input-group label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            color: var(--text-muted);
-            display: block;
-            margin-bottom: 6px;
-        }
-        input, select, textarea {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 14px 15px;
-            color: var(--text-main);
-            font-size: 16px;
-            outline: none;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 0 3px var(--gold-glow);
-        }
+        .input-group label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px; }
+        input, select, textarea { width: 100%; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 16px; outline: none; transition: border 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
 
         .currency-input-box {
             display: flex;
@@ -128,14 +39,14 @@
             justify-content: space-between;
             width: 100%;
             background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 0 15px;
+            border: 1px solid #2563eb33;
+            border-radius: 10px;
+            padding: 0 14px;
             transition: border 0.2s, box-shadow 0.2s;
         }
         .currency-input-box:focus-within {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 0 3px var(--gold-glow);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
         .currency-input-box input {
             background: transparent;
@@ -146,11 +57,16 @@
             flex: 1;
             min-width: 0;
         }
-        .currency-input-box input:focus { border: none; box-shadow: none; }
+        .currency-input-box input:focus {
+            border: none;
+            box-shadow: none;
+        }
         .currency-prefix-badge {
             font-size: 16px;
             font-weight: 700;
-            color: var(--gold-bright);
+            color: var(--text-main);
+            background: transparent;
+            border: none;
             padding: 14px 2px 14px 0;
             flex-shrink: 0;
             user-select: none;
@@ -161,19 +77,21 @@
             align-items: center;
             width: 100%;
             background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 0 15px;
+            border: 1px solid #2563eb33;
+            border-radius: 10px;
+            padding: 0 14px;
             transition: border 0.2s, box-shadow 0.2s;
         }
         .phone-input-box:focus-within {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 0 3px var(--gold-glow);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
         .phone-dial-badge {
             font-size: 16px;
             font-weight: 700;
-            color: var(--gold-bright);
+            color: var(--text-main);
+            background: transparent;
+            border: none;
             padding: 14px 4px 14px 0;
             flex-shrink: 0;
             user-select: none;
@@ -187,240 +105,68 @@
             flex: 1;
             min-width: 0;
         }
-        .phone-input-box input:focus { border: none; box-shadow: none; }
+        .phone-input-box input:focus {
+            border: none;
+            box-shadow: none;
+        }
         .field-hint {
             font-size: 11px;
             color: var(--text-muted);
             margin-top: 5px;
         }
 
-        .gender-container { display: flex; gap: 10px; }
-        .gender-btn {
-            flex: 1;
-            background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 14px;
-            color: var(--text-muted);
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .gender-btn.selected {
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
-            color: #090b10;
-            border-color: var(--gold-bright);
-            box-shadow: 0 6px 18px var(--gold-glow);
-        }
+        .gender-container { display: flex; gap: 12px; }
+        .gender-btn { flex: 1; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px; color: var(--text-muted); font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .gender-btn.selected { background: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
 
         .multi-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
-        .multi-option-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 16px;
-            padding: 16px 12px;
-            color: var(--text-main);
-            font-size: 14px;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-        }
-        .multi-option-btn.selected {
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
-            color: #090b10;
-            border-color: var(--gold-bright);
-            box-shadow: 0 6px 18px var(--gold-glow);
-        }
+        .multi-option-btn { background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 14px 10px; color: var(--text-main); font-size: 14px; font-weight: 700; text-align: center; cursor: pointer; transition: all 0.2s; user-select: none; }
+        .multi-option-btn.selected { background: var(--accent-blue); color: #ffffff; border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-glow); }
 
-        /* Single Unified Gold Button System */
-        .btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
-            color: #090b10;
-            border: none;
-            padding: 15px 18px;
-            border-radius: 15px;
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: 0.2px;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.12s;
-            margin-top: 8px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            box-shadow: 0 8px 22px rgba(212, 175, 55, 0.22);
-        }
+        .btn { width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 10px; text-decoration: none; display: inline-block; text-align: center; }
         .btn:active { transform: scale(0.98); }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-glass);
-            color: var(--text-main);
-            box-shadow: none;
-            font-weight: 600;
-        }
-        .btn-ghost-link {
-            background: transparent;
-            border: 1px solid var(--border-gold);
-            color: var(--gold-bright);
-            box-shadow: none;
-            font-weight: 700;
-        }
+        .btn-secondary { background: #1e293b; border: 1px solid #334155; color: var(--text-muted); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn-unified { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #ffffff; border: 1px solid rgba(147, 197, 253, 0.35); }
 
         /* Rules Plain List Styling */
-        .rules-list { margin: 14px 0 20px 0; display: flex; flex-direction: column; gap: 12px; }
+        .rules-list { margin: 15px 0 20px 0; display: flex; flex-direction: column; gap: 12px; }
         .rule-item { font-size: 14px; line-height: 1.5; color: var(--text-main); }
-        .rule-item strong { color: var(--gold-bright); }
+        .rule-item strong { color: var(--accent-blue); }
 
         /* Picture Upload Styling */
-        .upload-dropzone {
-            border: 1.5px dashed var(--border-gold);
-            background: var(--bg-card);
-            border-radius: 22px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: border 0.2s, background 0.2s;
-        }
-        .upload-dropzone:hover {
-            border-color: var(--gold-bright);
-            background: rgba(212, 175, 55, 0.05);
-        }
-        #imagePreview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 12px auto;
-            display: none;
-            border: 2px solid var(--gold-primary);
-        }
+        .upload-dropzone { border: 2px dashed #2563eb55; background: var(--bg-input); border-radius: 14px; padding: 30px; text-align: center; cursor: pointer; margin-bottom: 20px; transition: border 0.2s; }
+        .upload-dropzone:hover { border-color: var(--accent-blue); }
+        #imagePreview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px auto; display: none; border: 2px solid var(--accent-blue); }
 
         /* Dashboard Screen */
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-        .user-badge {
-            font-size: 13px;
-            font-weight: 600;
-            background: var(--bg-card);
-            padding: 7px 13px;
-            border-radius: 999px;
-            color: var(--gold-bright);
-            border: 1px solid var(--border-gold);
-        }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .user-badge { font-size: 14px; background: #1e293b; padding: 6px 12px; border-radius: 20px; color: var(--text-muted); border: 1px solid #334155; }
+        
+        .bonus-card { background: linear-gradient(135deg, #10b98122, #05966944); border: 1px solid #10b98166; border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; }
+        .bonus-amount { font-size: 24px; font-weight: 800; color: #10b981; margin: 6px 0 10px 0; }
 
-        .verification-banner {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--border-gold);
-            color: var(--gold-bright);
-            padding: 13px 16px;
-            border-radius: 16px;
-            text-align: center;
-            margin-bottom: 16px;
-            font-weight: 600;
-            font-size: 13px;
-        }
+        .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        .balance-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .balance-amount { font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 12px; }
+        .live-ticker { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .pulsing-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
 
-        .bonus-card {
-            background: linear-gradient(145deg, rgba(212, 175, 55, 0.14), rgba(20, 23, 33, 0.92));
-            border: 1px solid var(--border-gold);
-            border-radius: 22px;
-            padding: 18px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .bonus-amount {
-            font-size: 25px;
-            font-weight: 800;
-            color: var(--gold-bright);
-            margin: 6px 0 10px 0;
-        }
-
-        .balance-card {
-            background: linear-gradient(160deg, #171a26 0%, #0d0f17 100%);
-            border: 1px solid var(--border-gold);
-            border-radius: 24px;
-            padding: 24px 20px;
-            text-align: center;
-            margin-bottom: 18px;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
-        }
-        .balance-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 8px;
-        }
-        .balance-amount {
-            font-size: 32px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 12px;
-        }
-        .live-ticker {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(212, 175, 55, 0.12);
-            color: var(--gold-bright);
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid var(--border-gold);
-        }
-        .pulsing-dot {
-            width: 7px;
-            height: 7px;
-            background: var(--gold-bright);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .actions-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
-        .action-tile {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 18px;
-            text-align: center;
-            cursor: pointer;
-            transition: border 0.2s, transform 0.12s;
-        }
-        .action-tile:hover { border-color: var(--gold-primary); }
-        .action-tile:active { transform: scale(0.98); }
+        .actions-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+        .action-tile { background: var(--bg-card); border: 1px solid #1e293b; border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; transition: border 0.2s; }
+        .action-tile:hover { border-color: var(--accent-blue); }
         .action-tile span { display: block; font-size: 24px; margin-bottom: 6px; }
-        .action-tile p { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        .action-tile p { font-size: 15px; font-weight: bold; }
 
-        .info-card {
-            background: var(--bg-card);
-            border-radius: 18px;
-            padding: 16px;
-            border: 1px solid var(--border-glass);
-            margin-top: auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 8px;
-        }
+        .info-card { background: var(--bg-card); border-radius: 14px; padding: 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
 
-        /* Dashboard-Only Message Logo + "Contact Supreme Leader" + Devil Mascot Above It */
+        /* Dashboard-Only Gmail Logo + Devil Mascot Above It */
         .floating-chat-anchor {
             display: none;
             position: absolute;
-            bottom: 18px;
-            right: 18px;
+            bottom: 20px;
+            right: 20px;
             z-index: 90;
             flex-direction: column;
             align-items: center;
@@ -429,49 +175,31 @@
         .floating-chat-anchor.visible-on-dashboard {
             display: flex;
         }
-        .floating-contact-trigger {
-            pointer-events: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-        }
         .floating-chat-btn {
+            pointer-events: auto;
             position: relative;
-            width: 58px;
-            height: 58px;
-            border-radius: 20px;
-            background: linear-gradient(145deg, var(--gold-bright), var(--gold-primary));
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: 0 10px 26px rgba(212, 175, 55, 0.35);
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #93c5fd;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             animation: logoBobUpDown 2.2s ease-in-out infinite;
         }
-        .floating-contact-trigger:active .floating-chat-btn { transform: scale(0.94); }
-        .contact-leader-caption {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gold-bright);
-            background: rgba(10, 12, 18, 0.9);
-            border: 1px solid var(--border-gold);
-            padding: 3px 8px;
-            border-radius: 999px;
-            white-space: nowrap;
-        }
+        .floating-chat-btn:active { transform: scale(0.94); }
         @keyframes logoBobUpDown {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-7px); }
         }
 
         .logo-perch-slot {
             width: 78px;
-            height: 56px;
-            margin-bottom: -6px;
+            height: 58px;
+            margin-bottom: -8px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
@@ -559,100 +287,35 @@
         .devil-mascot[data-pose="3"] .pose-3 { display: inline; }
 
         /* Modals */
-        .modal {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(4, 5, 8, 0.82);
-            backdrop-filter: blur(10px);
-            z-index: 120;
-            justify-content: center;
-            align-items: flex-end;
-        }
+        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 13, 27, 0.85); backdrop-filter: blur(5px); z-index: 120; justify-content: center; align-items: flex-end; }
         .modal.active { display: flex; }
-        .modal-content {
-            width: 100%;
-            max-width: 480px;
-            background: #12151f;
-            border-top: 1px solid var(--border-gold);
-            border-radius: 28px 28px 0 0;
-            padding: 24px 20px 28px 20px;
-            animation: slideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-            max-height: 88vh;
-            overflow-y: auto;
-        }
+        .modal-content { width: 100%; max-width: 480px; background: var(--bg-card); border-top: 1px solid #2563eb44; border-radius: 20px 20px 0 0; padding: 24px; animation: slideUp 0.3s ease-out; max-height: 88vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .id-modal {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(4, 5, 8, 0.86);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+        .id-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 13, 27, 0.9); backdrop-filter: blur(8px); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
         .id-modal.active { display: flex; }
-        .id-modal-content {
-            width: 100%;
-            max-width: 390px;
-            background: linear-gradient(170deg, #161a26 0%, #0e1017 100%);
-            border: 1px solid var(--border-gold);
-            border-radius: 28px;
-            padding: 26px 22px;
-            text-align: center;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78);
-        }
+        .id-modal-content { width: 100%; max-width: 380px; background: var(--bg-card); border: 1px solid #2563eb55; border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
 
-        /* Smooth Unnumbered Clearance Sheet */
-        .smooth-clearance-body {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin: 14px 0 18px 0;
-            text-align: left;
-        }
-        .membership-highlight-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--gold-bright);
-            letter-spacing: -0.2px;
-            margin-bottom: 6px;
-        }
-        .membership-highlight-sub {
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--text-main);
-        }
-
+        .verification-banner { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; color: #eab308; padding: 14px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 13px; line-height: 1.45; }
         .error-text { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
-        .success-banner {
-            background: rgba(52, 211, 153, 0.12);
-            border: 1px solid rgba(52, 211, 153, 0.4);
-            color: var(--success);
-            padding: 14px;
-            border-radius: 14px;
-            text-align: center;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 14px;
-            font-weight: 700;
+        .success-banner { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: var(--success); padding: 14px; border-radius: 10px; text-align: center; margin-bottom: 15px; display: none; font-size: 14px; font-weight: bold; }
+
+        .clearance-copy {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.55;
+            margin-top: 6px;
+            margin-bottom: 14px;
+        }
+        .clearance-copy strong {
+            color: var(--text-main);
         }
 
         .email-address-box {
             background: var(--bg-input);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 13px 14px;
+            border: 1px solid #2563eb44;
+            border-radius: 10px;
+            padding: 12px 14px;
             margin: 12px 0;
             display: flex;
             align-items: center;
@@ -660,86 +323,29 @@
             gap: 8px;
             font-size: 14px;
             font-weight: 700;
-            color: var(--gold-bright);
+            color: #ffffff;
         }
         .copy-mini-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--border-glass);
-            color: var(--text-main);
-            border-radius: 10px;
-            padding: 6px 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            border-radius: 7px;
+            padding: 6px 10px;
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             flex-shrink: 0;
         }
-
-        .credentials-pill-box {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid var(--border-gold);
-            border-radius: 16px;
-            padding: 12px 14px;
-            margin-bottom: 16px;
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-        .credentials-pill-box strong { color: var(--gold-bright); }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="appContainer">
 
-    <!-- STEP 0: SIGN UP / LOG IN CHOICE SCREEN -->
-    <div id="screenGateway" class="screen">
-        <div class="gateway-wrap">
-            <div class="gateway-hero">
-                <div style="font-size: 32px; margin-bottom: 10px;">🔯🔺</div>
-                <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">THE ILLUMINATI VAULT</h2>
-            </div>
-
-            <div class="gateway-actions">
-                <button type="button" class="btn" onclick="goToSignUp()">Sign Up</button>
-                <button type="button" class="btn btn-ghost-link" onclick="goToLoginScreen()">Log In</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- DEDICATED LOG IN SCREEN -->
-    <div id="screenLogin" class="screen">
-        <h2 style="font-size: 21px; font-weight: 800; margin-bottom: 18px;">Log In</h2>
-
-        <div class="input-group">
-            <label>Country Code</label>
-            <select id="loginCountrySelect" onchange="handleLoginCountryChange()">
-                <option value="">-- Select Country Code --</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label id="loginMobileLabel">Phone Number</label>
-            <div class="phone-input-box">
-                <span class="phone-dial-badge" id="loginPhoneDialBadge">+1</span>
-                <input type="text" id="loginScreenPhone" inputmode="numeric" oninput="sanitizeLoginPhoneInput(this)">
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="loginScreenPassword" minlength="4" maxlength="8" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumericPassword(this)">
-        </div>
-
-        <p id="loginScreenError" class="error-text" style="margin-bottom: 10px;"></p>
-
-        <button type="button" class="btn" onclick="submitLoginScreen()">Log In</button>
-        <button type="button" class="btn btn-secondary" onclick="setScreenStep('gateway')">Back</button>
-    </div>
-
-    <!-- STEP 1: ONLINE REGISTRATION FORM (SIGN UP FLOW) -->
+    <!-- STEP 1: ONLINE REGISTRATION FORM -->
     <div id="screenRegistration" class="screen">
         <h2 style="font-size: 20px; margin-bottom: 4px;">🔯THE ILLUMINATI ONLINE REGISTRATION FORM.🔺</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px;">The Illuminati is an organization committed to empowering individuals worldwide. We focus on security, prosperity, and helping members achieve financial success and fame without harm or deception.</p>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">The Illuminati is an organization committed to empowering individuals worldwide. We focus on security, prosperity, and helping members achieve financial success and fame without harm or deception.</p>
 
         <div class="input-group">
             <label>Name</label>
@@ -779,17 +385,13 @@
             <label id="mobileLabel">Mobile Number</label>
             <div class="phone-input-box">
                 <span class="phone-dial-badge" id="phoneDialBadge">+1</span>
-                <input type="text" id="regMobile" inputmode="numeric" oninput="sanitizePhoneInput(this)">
+                <input type="text" id="regMobile" placeholder="Enter 10-digit phone number" inputmode="numeric" oninput="sanitizePhoneInput(this)">
             </div>
-        </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="regPassword" minlength="4" maxlength="8" inputmode="numeric" pattern="[0-9]*" oninput="enforceNumericPassword(this)">
+            <div class="field-hint" id="phoneLengthHint">Select a country to see required digit length.</div>
         </div>
 
         <p id="regError" class="error-text" style="margin-bottom: 10px;"></p>
         <button class="btn" onclick="submitRegistration()">Next</button>
-        <button type="button" class="btn btn-secondary" onclick="setScreenStep('gateway')">Back</button>
     </div>
 
     <!-- STEP 2: SERVICE REQUEST -->
@@ -851,23 +453,19 @@
     <div id="dashScreen" class="screen">
         <div class="dash-header">
             <div>
-                <h3 style="font-size: 19px; font-weight: 800;">Vault Dashboard</h3>
-                <p style="font-size: 12px; color: var(--text-muted);" id="activeNodeLabel">Active Node: #NG-8894</p>
+                <h3 style="font-size: 18px;">Vault Dashboard</h3>
+                <p style="font-size: 12px; color: var(--text-muted);" id="activeNodeLabel">Active Node: #8894</p>
             </div>
             <div class="user-badge" id="dashUserBadge">ID: User</div>
         </div>
 
-        <div id="verificationNotice" class="verification-banner">⚠️ Membership under verification. Pending final approval.</div>
-
-        <div id="loginCredentialsSummary" class="credentials-pill-box">
-            Login Phone: <strong id="summaryLoginPhone">—</strong> • Password: <strong id="summaryLoginPassword">—</strong>
-        </div>
+        <div id="verificationNotice" class="verification-banner">Please contact the supreme leader to get your membership ID and complete your membership verification.</div>
 
         <!-- WELCOME BONUS CARD -->
         <div id="welcomeBonusBox" class="bonus-card">
-            <div style="font-size: 12px; color: var(--gold-bright); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">🎁 Welcome Bonus Unlocked</div>
+            <div style="font-size: 13px; color: #10b981; font-weight: bold; text-transform: uppercase;">🎁 Welcome Bonus Unlocked</div>
             <div class="bonus-amount" id="bonusDisplay">$4,072.00</div>
-            <button class="btn" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
+            <button class="btn btn-success" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
         </div>
 
         <div class="balance-card">
@@ -888,26 +486,25 @@
 
         <div class="info-card">
             <span style="font-size: 13px; color: var(--text-muted);">📅 Next Meeting:</span>
-            <span style="font-weight: 700; color: var(--gold-bright); font-size: 14px;">April 5th</span>
+            <span style="font-weight: bold; color: var(--accent-blue); font-size: 14px;">April 5th</span>
         </div>
     </div>
 
     <!-- NON-BLOCKING FORM FIELD TRACKER SLOT -->
     <div id="fieldTrackerSlot" class="field-tracker-slot"></div>
 
-    <!-- DASHBOARD-ONLY MESSAGE LOGO + "Contact Supreme Leader" + RED DEVIL MASCOT ABOVE IT -->
+    <!-- DASHBOARD-ONLY GMAIL LOGO + RED DEVIL MASCOT ON TOP OF IT -->
     <div id="dashboardChatAnchor" class="floating-chat-anchor">
         <div id="logoPerchSlot" class="logo-perch-slot"></div>
-        <button type="button" class="floating-contact-trigger" onclick="openGmailOrChatModal()" aria-label="Contact Supreme Leader">
-            <div class="floating-chat-btn">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#090b10" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                    <circle cx="9" cy="12" r="1" fill="#090b10"/>
-                    <circle cx="12" cy="12" r="1" fill="#090b10"/>
-                    <circle cx="15" cy="12" r="1" fill="#090b10"/>
-                </svg>
-            </div>
-            <span class="contact-leader-caption">Contact Supreme Leader</span>
+        <button type="button" class="floating-chat-btn" onclick="openGmailOrChatModal()" aria-label="Contact via Gmail or Google Chat">
+            <svg width="34" height="34" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 17.5v-11z" fill="#ffffff"/>
+                <path d="M2.5 7l9.5 6.8L21.5 7" fill="none" stroke="#ea4335" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 18V7.5l4 2.9V18H3z" fill="#4285f4"/>
+                <path d="M17 18v-7.6l4-2.9V18h-4z" fill="#34a853"/>
+                <path d="M2.5 7l9.5 6.8L21.5 7" fill="none" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21.5 7L17 10.4V18h3.5a1.5 1.5 0 0 0 1.5-1.5V7z" fill="#fbbc05"/>
+            </svg>
         </button>
     </div>
 
@@ -976,33 +573,22 @@
         </g>
     </svg>
 
-    <!-- SMOOTH UNNUMBERED CLEARANCE & MEMBERSHIP ID MODAL -->
+    <!-- ADMIN REQUIREMENTS NOTICE MODAL -->
     <div id="adminNoticeModal" class="id-modal">
         <div class="id-modal-content">
-            <div style="font-size: 28px; margin-bottom: 8px;">✦</div>
-            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Clearance Required</h3>
-            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.45;">
-                Do you already have your Membership ID from the Supreme Leader?
+            <div style="font-size: 32px; margin-bottom: 6px;">ℹ️</div>
+            <h3 style="font-size: 18px; margin-bottom: 6px;">Clearance Required</h3>
+            <p class="clearance-copy">
+                To continue, you will need your <strong>Membership ID</strong> from the Supreme Leader. If you do not have your <strong>Membership ID</strong> yet, request it on Gmail or Google Chat first, or tap proceed if you already have it.
             </p>
 
-            <div class="smooth-clearance-body">
-                <div class="membership-highlight-title">Membership ID</div>
-                <div class="membership-highlight-sub">
-                    Request your <strong>Membership ID</strong> directly from the Supreme Leader on Gmail or Google Chat so you can complete your membership verification and unlock withdrawals.
-                </div>
-            </div>
-
-            <button class="btn" style="margin-bottom: 8px;" onclick="closeAdminNoticeModal(); openGmailOrChatModal();">
-                Contact Supreme Leader (Gmail / Google Chat)
+            <button class="btn btn-unified" style="margin-bottom: 8px;" onclick="closeAdminNoticeModal(); openGmailOrChatModal();">
+                ✉️ Request Membership ID
             </button>
-
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
-                Already have your Membership ID? Tap Proceed below.
-            </p>
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-secondary" onclick="closeAdminNoticeModal()">Cancel</button>
-                <button class="btn" onclick="proceedToMembershipInput()">Proceed</button>
+                <button class="btn btn-unified" onclick="proceedToMembershipInput()">Proceed</button>
             </div>
         </div>
     </div>
@@ -1010,9 +596,11 @@
     <!-- MEMBERSHIP ID CHECK MODAL -->
     <div id="membershipIdModal" class="id-modal">
         <div class="id-modal-content">
-            <div style="font-size: 28px; margin-bottom: 8px;">🔒</div>
-            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Membership ID Verification</h3>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 14px;">Enter your Membership ID to authorize withdrawal access.</p>
+            <div style="font-size: 32px; margin-bottom: 6px;">🔒</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Security Verification</h3>
+            <p class="clearance-copy">
+                Enter your <strong>Membership ID</strong> below to authorize withdrawal access, or contact the Supreme Leader on Gmail or Google Chat to request your <strong>Membership ID</strong>.
+            </p>
 
             <div class="input-group">
                 <label>Membership ID</label>
@@ -1021,26 +609,26 @@
 
             <p id="membershipError" class="error-text" style="margin-bottom: 12px;"></p>
 
-            <button class="btn btn-ghost-link" style="margin-bottom: 8px;" onclick="closeMembershipModal(); openGmailOrChatModal();">
-                Request Membership ID on Gmail / Google Chat
+            <button class="btn btn-unified" style="margin-bottom: 8px;" onclick="closeMembershipModal(); openGmailOrChatModal();">
+                ✉️ Request Membership ID
             </button>
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-secondary" onclick="closeMembershipModal()">Cancel</button>
-                <button class="btn" onclick="authorizeMembershipId()">Authorize</button>
+                <button class="btn btn-unified" onclick="authorizeMembershipId()">Authorize</button>
             </div>
         </div>
     </div>
 
-    <!-- GMAIL & GOOGLE CHAT CONTACT MODAL (SINGLE UNIFIED BUTTON STYLE) -->
+    <!-- GMAIL & GOOGLE CHAT CONTACT MODAL -->
     <div id="gmailChatModal" class="modal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
-                    <h3 style="font-size: 19px; font-weight: 800;">Contact Supreme Leader</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Reach out on Gmail or Google Chat</p>
+                    <h3 style="font-size: 18px;">✉️ Contact via Gmail or Google Chat</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Request your Membership ID directly</p>
                 </div>
-                <button onclick="closeGmailOrChatModal()" style="background:none; border:none; color:var(--text-muted); font-size:26px; cursor:pointer;">×</button>
+                <button onclick="closeGmailOrChatModal()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">×</button>
             </div>
 
             <div class="email-address-box">
@@ -1048,16 +636,16 @@
                 <button type="button" class="copy-mini-btn" onclick="copyContactEmail()">Copy</button>
             </div>
 
-            <a id="gmailMailtoLink" href="mailto:george43854@gmail.com" class="btn" style="margin-bottom: 8px;">
-                Send Message on Gmail
+            <a id="gmailMailtoLink" href="mailto:george43854@gmail.com" class="btn btn-unified" style="margin-bottom: 8px;">
+                📧 Send on Gmail
             </a>
 
-            <a id="googleChatLink" href="https://chat.google.com/" target="_blank" rel="noopener noreferrer" class="btn" style="margin-bottom: 8px;">
-                Send Message on Google Chat
+            <a id="googleChatLink" href="https://chat.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-unified" style="margin-bottom: 8px;">
+                💬 Message on Google Chat
             </a>
 
             <p style="font-size: 11px; color: var(--text-muted); line-height: 1.45; margin-top: 6px;">
-                Gmail emails deliver to your inbox and Google Chat messages deliver to Google Chat—they do not cross-post automatically, so either option connects directly with <strong>george43854@gmail.com</strong>.
+                Choose Send on Gmail for email or Message on Google Chat for chat to reach <strong>george43854@gmail.com</strong>.
             </p>
         </div>
     </div>
@@ -1066,8 +654,8 @@
     <div id="withdrawModal" class="modal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 style="font-size: 19px; font-weight: 800;">Withdraw Funds</h3>
-                <button onclick="closeWithdrawModal()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">×</button>
+                <h3 style="font-size: 18px;">Withdraw Funds</h3>
+                <button onclick="closeWithdrawModal()" style="background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer;">×</button>
             </div>
 
             <div id="withdrawSuccessBox" class="success-banner">Withdrawal processed successfully! Transfer underway.</div>
@@ -1121,24 +709,18 @@
 
 <script>
     const CONTACT_EMAIL = "george43854@gmail.com";
-    const SYNC_API_URL = "";
 
-    const STORAGE_KEY_STEP = "vault_registration_step_v20";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v20";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v20";
-    const STORAGE_KEY_TIME = "vault_last_time_v20";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v20";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v20";
-    const STORAGE_KEY_ACCOUNTS_REGISTRY = "vault_accounts_registry_v20";
+    const STORAGE_KEY_STEP = "vault_registration_step_v17";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v17";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v17";
+    const STORAGE_KEY_TIME = "vault_last_time_v17";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v17";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v17";
 
-    const DEFAULT_COUNTRY = "United States";
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
     const BASE_BALANCE_NGN = 12700.00 * NGN_PER_USD;
     const BONUS_AMOUNT_NGN = 4072.00 * NGN_PER_USD;
-
-    const MIN_PASSWORD_LEN = 4;
-    const MAX_PASSWORD_LEN = 8;
 
     const COUNTRIES_DATA = [
         { name: "Afghanistan", symbol: "؋", rate: 71, dial: "+93", minLen: 9, maxLen: 9 },
@@ -1266,7 +848,7 @@
         { name: "New Zealand", symbol: "NZ$", rate: 1.69, dial: "+64", minLen: 8, maxLen: 10 },
         { name: "Nicaragua", symbol: "C$", rate: 36.8, dial: "+505", minLen: 8, maxLen: 8 },
         { name: "Niger", symbol: "CFA", rate: 605, dial: "+227", minLen: 8, maxLen: 8 },
-        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", minLen: 9, maxLen: 9 },
+        { name: "Nigeria", symbol: "₦", rate: NGN_PER_USD, dial: "+234", minLen: 10, maxLen: 10 },
         { name: "North Korea", symbol: "₩", rate: 900, dial: "+850", minLen: 8, maxLen: 10 },
         { name: "North Macedonia", symbol: "ден", rate: 56.5, dial: "+389", minLen: 8, maxLen: 8 },
         { name: "Norway", symbol: "kr", rate: 11.1, dial: "+47", minLen: 8, maxLen: 8 },
@@ -1345,19 +927,6 @@
     let pictureUploaded = false;
     let selectedPriorities = [];
 
-    function enforceNumericPassword(inputEl) {
-        const digitsOnly = inputEl.value.replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
-        inputEl.value = digitsOnly;
-    }
-
-    function isValidPasswordLength(pass) {
-        return /^[0-9]+$/.test(pass) && pass.length >= MIN_PASSWORD_LEN && pass.length <= MAX_PASSWORD_LEN;
-    }
-
-    function normalizePhoneKey(phone) {
-        return String(phone || "").replace(/[^0-9]/g, "");
-    }
-
     function formatCommaInput(inputEl) {
         const rawDigits = inputEl.value.replace(/[^0-9.]/g, '');
         if (!rawDigits) {
@@ -1375,72 +944,47 @@
     }
 
     function getCountryConfig(countryName) {
-        return COUNTRIES_DATA.find(c => c.name === countryName) || COUNTRIES_DATA.find(c => c.name === DEFAULT_COUNTRY);
+        return COUNTRIES_DATA.find(c => c.name === countryName) || { name: "United States", symbol: "$", rate: 1, dial: "+1", minLen: 10, maxLen: 10 };
+    }
+
+    function getLengthRequirementText(cfg) {
+        if (cfg.minLen === cfg.maxLen) {
+            return `${cfg.minLen} digits after ${cfg.dial}`;
+        }
+        return `${cfg.minLen}-${cfg.maxLen} digits after ${cfg.dial}`;
     }
 
     function updatePhoneFieldForCountry(countryName, shouldResetInput = false) {
         const phoneInput = document.getElementById('regMobile');
         const dialBadge = document.getElementById('phoneDialBadge');
+        const hintEl = document.getElementById('phoneLengthHint');
         const labelEl = document.getElementById('mobileLabel');
 
-        const cfg = getCountryConfig(countryName || DEFAULT_COUNTRY);
+        if (!countryName) {
+            dialBadge.innerText = "+1";
+            phoneInput.maxLength = 15;
+            phoneInput.placeholder = "Enter phone number";
+            labelEl.innerText = "Mobile Number";
+            hintEl.innerText = "Select a country to see required digit length.";
+            if (shouldResetInput) phoneInput.value = '';
+            return;
+        }
+
+        const cfg = getCountryConfig(countryName);
         dialBadge.innerText = cfg.dial;
         phoneInput.maxLength = cfg.maxLen;
+        phoneInput.placeholder = cfg.minLen === cfg.maxLen
+            ? `Enter ${cfg.minLen}-digit number`
+            : `Enter ${cfg.minLen}-${cfg.maxLen} digits`;
         labelEl.innerText = `Mobile Number (${cfg.dial})`;
+        hintEl.innerText = `Required format: ${getLengthRequirementText(cfg)} (no leading 0 needed).`;
         if (shouldResetInput) {
             phoneInput.value = '';
         }
     }
 
     function sanitizePhoneInput(inputEl) {
-        const countryName = document.getElementById('regCountry').value || DEFAULT_COUNTRY;
-        const cfg = getCountryConfig(countryName);
-        let digitsOnly = inputEl.value.replace(/[^0-9]/g, '');
-        if (digitsOnly.length > cfg.maxLen) {
-            digitsOnly = digitsOnly.slice(0, cfg.maxLen);
-        }
-        inputEl.value = digitsOnly;
-    }
-
-    function populateLoginCountrySelect(selectedCountry = DEFAULT_COUNTRY) {
-        const selectEl = document.getElementById('loginCountrySelect');
-        selectEl.innerHTML = "";
-
-        const defaultOpt = document.createElement('option');
-        defaultOpt.value = "";
-        defaultOpt.textContent = "-- Select Country Code --";
-        selectEl.appendChild(defaultOpt);
-
-        COUNTRIES_DATA.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c.name;
-            opt.textContent = `${c.name} (${c.dial})`;
-            selectEl.appendChild(opt);
-        });
-
-        selectEl.value = COUNTRIES_DATA.some(c => c.name === selectedCountry) ? selectedCountry : DEFAULT_COUNTRY;
-        handleLoginCountryChange(false);
-    }
-
-    function handleLoginCountryChange(shouldResetInput = true) {
-        const countryName = document.getElementById('loginCountrySelect').value || DEFAULT_COUNTRY;
-        const phoneInput = document.getElementById('loginScreenPhone');
-        const dialBadge = document.getElementById('loginPhoneDialBadge');
-        const labelEl = document.getElementById('loginMobileLabel');
-
-        const cfg = getCountryConfig(countryName);
-        dialBadge.innerText = cfg.dial;
-        phoneInput.maxLength = cfg.maxLen;
-        labelEl.innerText = `Phone Number (${cfg.dial})`;
-        if (shouldResetInput) {
-            phoneInput.value = '';
-        } else {
-            sanitizeLoginPhoneInput(phoneInput);
-        }
-    }
-
-    function sanitizeLoginPhoneInput(inputEl) {
-        const countryName = document.getElementById('loginCountrySelect').value || DEFAULT_COUNTRY;
+        const countryName = document.getElementById('regCountry').value;
         const cfg = getCountryConfig(countryName);
         let digitsOnly = inputEl.value.replace(/[^0-9]/g, '');
         if (digitsOnly.length > cfg.maxLen) {
@@ -1450,19 +994,19 @@
     }
 
     function ngnToCountryAmount(ngnAmount, countryName) {
-        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY);
+        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
         const usdValue = ngnAmount / NGN_PER_USD;
         return usdValue * cfg.rate;
     }
 
     function formatInCountryCurrency(ngnAmount, countryName) {
-        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY);
+        const cfg = getCountryConfig(countryName || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States");
         const converted = ngnToCountryAmount(ngnAmount, countryName);
         return cfg.symbol + converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function updateCurrencyLabels() {
-        const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY;
+        const countryName = document.getElementById('regCountry').value || localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
         const cfg = getCountryConfig(countryName);
         document.getElementById('incomeLabel').innerText = `Monthly Income (${cfg.symbol})`;
         document.getElementById('incomeCurrencyBadge').innerText = cfg.symbol;
@@ -1473,160 +1017,12 @@
     }
 
     function handleCountryChange() {
-        const countryName = document.getElementById('regCountry').value || DEFAULT_COUNTRY;
-        localStorage.setItem(STORAGE_KEY_COUNTRY, countryName);
+        const countryName = document.getElementById('regCountry').value;
+        if (countryName) {
+            localStorage.setItem(STORAGE_KEY_COUNTRY, countryName);
+        }
         updateCurrencyLabels();
         updatePhoneFieldForCountry(countryName, true);
-    }
-
-    function getAccountsRegistry() {
-        try {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY_ACCOUNTS_REGISTRY) || "{}");
-        } catch (e) {
-            return {};
-        }
-    }
-
-    function saveAccountSnapshot() {
-        const fullPhone = localStorage.getItem('user_profile_mobile') || "";
-        const password = (localStorage.getItem('user_profile_password') || "").replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
-        const key = normalizePhoneKey(fullPhone);
-        if (!key || !password) return;
-
-        const record = {
-            phoneKey: key,
-            phone: fullPhone,
-            password: password,
-            name: localStorage.getItem('user_profile_name') || "User",
-            country: localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY,
-            priorities: selectedPriorities,
-            bonusClaimed: localStorage.getItem(STORAGE_KEY_BONUS_CLAIMED) === 'true',
-            balanceNgn: currentBalanceNgn,
-            lastUpdated: Date.now(),
-            step: localStorage.getItem(STORAGE_KEY_STEP) || 'dashboard'
-        };
-
-        const registry = getAccountsRegistry();
-        registry[key] = record;
-        localStorage.setItem(STORAGE_KEY_ACCOUNTS_REGISTRY, JSON.stringify(registry));
-
-        if (SYNC_API_URL) {
-            fetch(`${SYNC_API_URL}/account/save`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(record)
-            }).catch(() => {});
-        }
-    }
-
-    function applyAccountSnapshot(record) {
-        if (!record) return;
-        const numericPass = String(record.password || '').replace(/[^0-9]/g, '').slice(0, MAX_PASSWORD_LEN);
-        localStorage.setItem('user_profile_name', record.name || 'User');
-        localStorage.setItem('user_profile_mobile', record.phone || '');
-        localStorage.setItem('user_profile_password', numericPass);
-        if (record.country) {
-            localStorage.setItem(STORAGE_KEY_COUNTRY, record.country);
-            document.getElementById('regCountry').value = record.country;
-        }
-        if (Array.isArray(record.priorities)) {
-            selectedPriorities = record.priorities;
-            localStorage.setItem(STORAGE_KEY_PRIORITIES, JSON.stringify(selectedPriorities));
-            document.querySelectorAll('#priorityOptions .multi-option-btn').forEach(btn => {
-                btn.classList.toggle('selected', selectedPriorities.includes(btn.dataset.value));
-            });
-        }
-        localStorage.setItem(STORAGE_KEY_BONUS_CLAIMED, record.bonusClaimed ? 'true' : 'false');
-
-        const baseSavedNgn = typeof record.balanceNgn === 'number' ? record.balanceNgn : BASE_BALANCE_NGN;
-        const elapsedSec = record.lastUpdated ? Math.max(0, (Date.now() - record.lastUpdated) / 1000) : 0;
-        currentBalanceNgn = baseSavedNgn + (elapsedSec * INCREMENT_PER_SEC_NGN);
-        saveBalanceState();
-        refreshCredentialsSummary();
-        updateCurrencyLabels();
-        checkBonusState();
-    }
-
-    function refreshCredentialsSummary() {
-        const phone = localStorage.getItem('user_profile_mobile') || '—';
-        const pass = localStorage.getItem('user_profile_password') || '—';
-        document.getElementById('summaryLoginPhone').innerText = phone;
-        document.getElementById('summaryLoginPassword').innerText = pass;
-    }
-
-    function goToSignUp() {
-        document.getElementById('regError').style.display = 'none';
-        const activeCountry = document.getElementById('regCountry').value || DEFAULT_COUNTRY;
-        document.getElementById('regCountry').value = activeCountry;
-        updatePhoneFieldForCountry(activeCountry, false);
-        setScreenStep('registration');
-    }
-
-    function goToLoginScreen() {
-        document.getElementById('loginScreenError').style.display = 'none';
-        populateLoginCountrySelect(DEFAULT_COUNTRY);
-        document.getElementById('loginScreenPhone').value = '';
-        document.getElementById('loginScreenPassword').value = '';
-        setScreenStep('login');
-    }
-
-    async function submitLoginScreen() {
-        const countryName = document.getElementById('loginCountrySelect').value || DEFAULT_COUNTRY;
-        const phoneInput = document.getElementById('loginScreenPhone');
-        sanitizeLoginPhoneInput(phoneInput);
-        const phoneDigits = phoneInput.value;
-
-        const passwordInput = document.getElementById('loginScreenPassword');
-        enforceNumericPassword(passwordInput);
-        const password = passwordInput.value;
-
-        const errEl = document.getElementById('loginScreenError');
-        const cfg = getCountryConfig(countryName);
-
-        if (!phoneDigits || phoneDigits.length < cfg.minLen || phoneDigits.length > cfg.maxLen) {
-            errEl.innerText = "Invalid phone number.";
-            errEl.style.display = 'block';
-            return;
-        }
-
-        if (!isValidPasswordLength(password)) {
-            errEl.innerText = "Password must be 4 to 8 numbers.";
-            errEl.style.display = 'block';
-            return;
-        }
-
-        const fullPhone = `${cfg.dial}${phoneDigits}`;
-        const key = normalizePhoneKey(fullPhone);
-
-        let matchedRecord = null;
-        const registry = getAccountsRegistry();
-        if (registry[key] && String(registry[key].password) === password) {
-            matchedRecord = registry[key];
-        }
-
-        if (!matchedRecord && SYNC_API_URL) {
-            try {
-                const res = await fetch(`${SYNC_API_URL}/account/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ phoneKey: key, password })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && data.account) matchedRecord = data.account;
-                }
-            } catch (e) {}
-        }
-
-        if (!matchedRecord) {
-            errEl.innerText = "Invalid credentials.";
-            errEl.style.display = 'block';
-            return;
-        }
-
-        errEl.style.display = 'none';
-        applyAccountSnapshot(matchedRecord);
-        setScreenStep('dashboard');
     }
 
     function syncDashboardChatVisibility(isDashboard) {
@@ -1723,10 +1119,13 @@
             countrySelect.appendChild(opt);
         });
 
-        countrySelect.value = DEFAULT_COUNTRY;
-        localStorage.setItem(STORAGE_KEY_COUNTRY, DEFAULT_COUNTRY);
-        updatePhoneFieldForCountry(DEFAULT_COUNTRY, false);
-        populateLoginCountrySelect(DEFAULT_COUNTRY);
+        const savedCountry = localStorage.getItem(STORAGE_KEY_COUNTRY);
+        if (savedCountry) {
+            countrySelect.value = savedCountry;
+            updatePhoneFieldForCountry(savedCountry, false);
+        } else {
+            updatePhoneFieldForCountry("", false);
+        }
 
         try {
             const savedPriorities = JSON.parse(localStorage.getItem(STORAGE_KEY_PRIORITIES) || '[]');
@@ -1743,7 +1142,6 @@
         }
 
         calculateStoredBalance();
-        refreshCredentialsSummary();
         updateCurrencyLabels();
         setupFormClickTracking();
         restoreUserStep();
@@ -1757,8 +1155,6 @@
         const isDashboard = stepName === 'dashboard';
         syncDashboardChatVisibility(isDashboard);
 
-        if (stepName === 'gateway') document.getElementById('screenGateway').classList.add('active');
-        if (stepName === 'login') document.getElementById('screenLogin').classList.add('active');
         if (stepName === 'registration') document.getElementById('screenRegistration').classList.add('active');
         if (stepName === 'service') document.getElementById('screenService').classList.add('active');
         if (stepName === 'rules') document.getElementById('screenRules').classList.add('active');
@@ -1767,17 +1163,15 @@
             document.getElementById('dashScreen').classList.add('active');
             const savedName = localStorage.getItem('user_profile_name') || 'User';
             document.getElementById('dashUserBadge').innerText = "ID: " + savedName;
-            refreshCredentialsSummary();
             calculateStoredBalance();
             updateCurrencyLabels();
             checkBonusState();
-            saveAccountSnapshot();
             startTicker();
         }
     }
 
     function restoreUserStep() {
-        const currentStep = localStorage.getItem(STORAGE_KEY_STEP) || 'gateway';
+        const currentStep = localStorage.getItem(STORAGE_KEY_STEP) || 'registration';
         setScreenStep(currentStep);
     }
 
@@ -1799,40 +1193,26 @@
             selectedPriorities.push(val);
         }
         localStorage.setItem(STORAGE_KEY_PRIORITIES, JSON.stringify(selectedPriorities));
-        saveAccountSnapshot();
     }
 
     function submitRegistration() {
         const name = document.getElementById('regName').value.trim();
         const age = document.getElementById('regAge').value;
-        const country = document.getElementById('regCountry').value || DEFAULT_COUNTRY;
+        const country = document.getElementById('regCountry').value;
         const occupation = document.getElementById('regOccupation').value.trim();
         const income = document.getElementById('regIncome').value.trim();
-        const mobileInput = document.getElementById('regMobile');
-        sanitizePhoneInput(mobileInput);
-        const mobileDigits = mobileInput.value;
-
-        const passwordInput = document.getElementById('regPassword');
-        enforceNumericPassword(passwordInput);
-        const password = passwordInput.value;
-
+        const mobileDigits = document.getElementById('regMobile').value.replace(/[^0-9]/g, '');
         const err = document.getElementById('regError');
 
-        if(!name || !age || !selectedGenderVal || !country || !occupation || !income || !mobileDigits || !password) {
-            err.innerText = "Please fill in all fields.";
-            err.style.display = 'block';
-            return;
-        }
-
-        if (!isValidPasswordLength(password)) {
-            err.innerText = "Password must be 4 to 8 numbers.";
+        if(!name || !age || !selectedGenderVal || !country || !occupation || !income || !mobileDigits) {
+            err.innerText = "Please fill in all required fields and select your age and gender.";
             err.style.display = 'block';
             return;
         }
 
         const cfg = getCountryConfig(country);
         if (mobileDigits.length < cfg.minLen || mobileDigits.length > cfg.maxLen) {
-            err.innerText = "Invalid phone number length.";
+            err.innerText = `For ${country} (${cfg.dial}), enter ${getLengthRequirementText(cfg)}.`;
             err.style.display = 'block';
             return;
         }
@@ -1840,23 +1220,19 @@
         err.style.display = 'none';
         localStorage.setItem('user_profile_name', name);
         localStorage.setItem('user_profile_mobile', `${cfg.dial}${mobileDigits}`);
-        localStorage.setItem('user_profile_password', password);
         localStorage.setItem(STORAGE_KEY_COUNTRY, country);
-        refreshCredentialsSummary();
         updateCurrencyLabels();
-        saveAccountSnapshot();
         setScreenStep('service');
     }
 
     function submitServiceRequest() {
         const err = document.getElementById('serviceError');
         if(selectedPriorities.length === 0) {
-            err.innerText = "Please select at least one option.";
+            err.innerText = "Please select at least one option from WHICH OF THIS DO YOU WANT MOSTLY??";
             err.style.display = 'block';
             return;
         }
         err.style.display = 'none';
-        saveAccountSnapshot();
         setScreenStep('rules');
     }
 
@@ -1899,8 +1275,6 @@
         const bonusClaimed = localStorage.getItem(STORAGE_KEY_BONUS_CLAIMED);
         if(bonusClaimed === 'true') {
             document.getElementById('welcomeBonusBox').style.display = 'none';
-        } else {
-            document.getElementById('welcomeBonusBox').style.display = 'block';
         }
     }
 
@@ -1910,9 +1284,8 @@
             currentBalanceNgn += BONUS_AMOUNT_NGN;
             localStorage.setItem(STORAGE_KEY_BONUS_CLAIMED, 'true');
             saveBalanceState();
-            saveAccountSnapshot();
             document.getElementById('welcomeBonusBox').style.display = 'none';
-            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY;
+            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
             document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
         }
     }
@@ -1942,7 +1315,7 @@
         if(tickerInterval) clearInterval(tickerInterval);
         tickerInterval = setInterval(() => {
             currentBalanceNgn += INCREMENT_PER_SEC_NGN;
-            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY;
+            const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
             document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
             saveBalanceState();
         }, 1000);
@@ -2009,7 +1382,7 @@
             return;
         }
 
-        const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || DEFAULT_COUNTRY;
+        const countryName = localStorage.getItem(STORAGE_KEY_COUNTRY) || "United States";
         const cfg = getCountryConfig(countryName);
         const amountInNgn = (enteredAmount / cfg.rate) * NGN_PER_USD;
 
@@ -2021,7 +1394,6 @@
 
         currentBalanceNgn -= amountInNgn;
         saveBalanceState();
-        saveAccountSnapshot();
         document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
         successBox.style.display = 'block';
         setTimeout(() => { closeWithdrawModal(); }, 3000);
@@ -2032,10 +1404,10 @@
         const userName = localStorage.getItem('user_profile_name') || 'Member';
         const country = localStorage.getItem(STORAGE_KEY_COUNTRY) || '';
         const subject = encodeURIComponent(`Membership ID Request - ${userName}`);
-        const body = encodeURIComponent(`Hello, my name is ${userName}${country ? ' (' + country + ')' : ''}. I am requesting my Membership ID.`);
+        const body = encodeURIComponent(`Hello Supreme Leader, my name is ${userName}${country ? ' (' + country + ')' : ''}. I am requesting my Membership ID.`);
 
         document.getElementById('gmailMailtoLink').href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-        document.getElementById('googleChatLink').href = `https://chat.google.com/u/0/`;
+        document.getElementById('googleChatLink').href = `https://chat.google.com/`;
         document.getElementById('gmailChatModal').classList.add('active');
     }
 
