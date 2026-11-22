@@ -2,296 +2,438 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Supreme Leader Inbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme Leader Reply Console</title>
     <style>
         :root {
             --bg-deep: #070d1b;
             --bg-card: #0f1c3f;
+            --bg-panel: #13234d;
             --bg-input: #172a5c;
             --accent-blue: #3b82f6;
-            --accent-red: #ef4444;
+            --accent-green: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
+            --border-subtle: #1e293b;
             --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
-        body { background: var(--bg-deep); color: var(--text-main); min-height: 100dvh; display: flex; justify-content: center; padding: 14px; }
-        .inbox-shell { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 14px; }
-        .card { background: var(--bg-card); border: 1px solid #1e293b; border-radius: 16px; padding: 16px; }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .btn { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
-        .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .btn-alert { background: #1e293b; border: 1px solid #334155; color: var(--success); }
-        input { width: 100%; background: var(--bg-input); border: 1px solid #2563eb33; border-radius: 10px; padding: 12px 14px; color: var(--text-main); font-size: 15px; outline: none; }
-        input:focus { border-color: var(--accent-blue); }
+        body {
+            background: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-        .thread-list { display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; margin-top: 10px; }
-        .thread-item { background: var(--bg-input); border: 1px solid transparent; border-radius: 12px; padding: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .thread-item.active { border-color: var(--accent-blue); background: #1e3570; }
-        .thread-name { font-weight: 800; font-size: 14px; }
-        .thread-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-        .thread-preview { font-size: 12px; color: #cbd5e1; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 340px; }
-        .unread-pill { background: var(--accent-red); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; flex-shrink: 0; }
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        header h1 { font-size: 17px; font-weight: 800; }
+        header span { font-size: 12px; color: var(--accent-green); font-weight: 700; }
 
-        .messages-box { background: #070d1b; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; height: 270px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
-        .bubble { max-width: 82%; padding: 10px 13px; border-radius: 12px; font-size: 14px; line-height: 1.4; word-break: break-word; }
-        .bubble.user { align-self: flex-start; background: #1e293b; border-left: 3px solid var(--accent-blue); }
-        .bubble.leader { align-self: flex-end; background: #dc2626; color: #fff; }
-        .meta { font-size: 10px; opacity: 0.75; margin-top: 4px; }
-        .reply-row { display: flex; gap: 8px; }
-        .err { color: var(--danger); font-size: 12px; margin-top: 8px; display: none; }
+        .btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+        .console-layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            min-height: 0;
+        }
+
+        .threads-sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .sidebar-top {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .thread-item {
+            padding: 13px 14px;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.7);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .thread-item:hover { background: var(--bg-panel); }
+        .thread-item.active {
+            background: var(--bg-panel);
+            border-left: 3px solid var(--accent-green);
+        }
+        .thread-user { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+        .thread-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; }
+        .thread-preview {
+            font-size: 12px;
+            color: #cbd5e1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-workspace {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-deep);
+            min-height: 0;
+        }
+        .chat-topbar {
+            padding: 12px 18px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-topbar h2 { font-size: 15px; }
+        .chat-topbar p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        .messages-feed {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .msg-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .msg-user {
+            align-self: flex-start;
+            background: var(--bg-panel);
+            border-left: 3px solid var(--accent-blue);
+        }
+        .msg-leader {
+            align-self: flex-end;
+            background: #065f46;
+            color: #ffffff;
+        }
+        .msg-time {
+            font-size: 10px;
+            opacity: 0.75;
+            margin-top: 4px;
+        }
+
+        .reply-bar {
+            padding: 12px 18px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 10px;
+        }
+        .reply-bar input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid #2563eb44;
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+        }
+        .reply-bar input:focus { border-color: var(--accent-green); }
+
+        .empty-state {
+            margin: auto;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            padding: 24px;
+        }
+
+        @media (max-width: 720px) {
+            .console-layout { grid-template-columns: 1fr; grid-template-rows: 210px 1fr; }
+            .threads-sidebar { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+        }
     </style>
 </head>
 <body>
-<div class="inbox-shell">
-    <div class="card top-bar">
-        <div>
-            <h2 style="font-size: 18px;">🔺 Supreme Leader Inbox</h2>
-            <p style="font-size: 11px; color: var(--text-muted);" id="workerStatusLabel">illuminati.illuminati-696.workers.dev</p>
-        </div>
-        <div style="display:flex; gap:8px;">
-            <button class="btn btn-alert" onclick="enableAlerts()">🔔 Alerts</button>
-            <button class="btn" onclick="loadInbox()">↻ Refresh</button>
-        </div>
-    </div>
 
-    <!-- PIN Gate -->
-    <div id="authCard" class="card">
-        <h3 style="font-size: 15px; margin-bottom: 8px;">Enter Admin PIN</h3>
-        <div class="reply-row">
-            <input type="password" id="adminPinInput" placeholder="Enter your PIN" onkeydown="if(event.key==='Enter') unlockInbox()">
-            <button class="btn" onclick="unlockInbox()">Unlock</button>
-        </div>
-        <p id="authError" class="err"></p>
+<header>
+    <div>
+        <h1>🔺 Supreme Leader Chat Console</h1>
+        <span id="statusLabel">● Live Sync Ready (No Password)</span>
     </div>
+    <button type="button" class="btn btn-blue" onclick="loadAllChats()">↻ Refresh</button>
+</header>
 
-    <!-- Main Inbox & Chat -->
-    <div id="mainPanel" style="display:none; flex-direction:column; gap:14px;">
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size: 15px;">Users Who Messaged You (<span id="threadCount">0</span>)</h3>
-            </div>
-            <div id="threadList" class="thread-list">
-                <p style="font-size:12px; color:var(--text-muted);">Loading conversations...</p>
+<div class="console-layout">
+    <aside class="threads-sidebar">
+        <div class="sidebar-top">
+            <span>All User Chats</span>
+            <span id="threadCountBadge">0</span>
+        </div>
+        <div id="threadsList">
+            <div class="empty-state">Loading chats...</div>
+        </div>
+    </aside>
+
+    <main class="chat-workspace">
+        <div class="chat-topbar">
+            <div>
+                <h2 id="selectedUserTitle">Select a chat thread</h2>
+                <p id="selectedThreadMeta">All messages load automatically on open</p>
             </div>
         </div>
 
-        <div class="card">
-            <div id="activeUserHeader" style="font-size:14px; font-weight:800; color:var(--text-muted);">Select a user above to chat</div>
-            <div id="messagesBox" class="messages-box">
-                <p style="font-size:13px; color:var(--text-muted); text-align:center; margin:auto;">No conversation selected.</p>
-            </div>
-            <div class="reply-row">
-                <input type="text" id="replyInput" placeholder="Type your reply..." onkeydown="if(event.key==='Enter') sendReply()">
-                <button class="btn btn-red" onclick="sendReply()">Reply</button>
-            </div>
-            <p id="replyError" class="err"></p>
+        <div id="messagesFeed" class="messages-feed">
+            <div class="empty-state">Waiting for chats...</div>
         </div>
-    </div>
+
+        <div class="reply-bar">
+            <input type="text" id="replyInput" placeholder="Type your reply..." onkeydown="if(event.key==='Enter') sendReply()">
+            <button type="button" class="btn" onclick="sendReply()">Send Reply</button>
+        </div>
+    </main>
 </div>
 
 <script>
     const WORKER_URL = "https://illuminati.illuminati-696.workers.dev";
-    const PIN_STORAGE_KEY = "supreme_leader_pin_v1";
+    const CACHE_KEY = "leader_console_threads_cache_v1";
 
-    let adminPin = "";
+    let threadsMap = {};
     let activeThreadId = null;
-    let lastTotalUnread = 0;
 
     window.addEventListener("DOMContentLoaded", () => {
-        const savedPin = sessionStorage.getItem(PIN_STORAGE_KEY);
-        if (savedPin) {
-            adminPin = savedPin;
-            showMainPanel();
-            loadInbox();
-            setInterval(pollAll, 4000);
-        }
+        try {
+            const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+            if (cached && typeof cached === "object") {
+                threadsMap = cached;
+                const keys = Object.keys(threadsMap);
+                if (keys.length > 0 && !activeThreadId) {
+                    activeThreadId = keys[0];
+                }
+                renderThreadsList();
+                renderActiveThread();
+            }
+        } catch (e) {}
+
+        loadAllChats();
+        setInterval(loadAllChats, 3500);
     });
 
-    function showMainPanel() {
-        document.getElementById("authCard").style.display = "none";
-        document.getElementById("mainPanel").style.display = "flex";
-    }
-
-    async function unlockInbox() {
-        const pin = document.getElementById("adminPinInput").value.trim();
-        const err = document.getElementById("authError");
-        if (!pin) {
-            err.innerText = "Please enter your PIN.";
-            err.style.display = "block";
-            return;
-        }
-        const res = await fetch(`${WORKER_URL}/inbox`, {
-            headers: { "X-Admin-Pin": pin }
-        });
-        if (!res.ok) {
-            err.innerText = "Wrong PIN.";
-            err.style.display = "block";
-            return;
-        }
-        err.style.display = "none";
-        adminPin = pin;
-        sessionStorage.setItem(PIN_STORAGE_KEY, pin);
-        showMainPanel();
-        await loadInbox();
-        setInterval(pollAll, 4000);
-    }
-
-    function playChime() {
+    async function loadAllChats() {
+        const statusEl = document.getElementById("statusLabel");
         try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioCtx();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(0.08, ctx.currentTime);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.2);
-        } catch (e) {}
-    }
-
-    function enableAlerts() {
-        if (!("Notification" in window)) return;
-        Notification.requestPermission().then(p => {
-            if (p === "granted") {
-                new Notification("Supreme Leader Alerts Enabled", { body: "You will be notified when users message you." });
+            const res = await fetch(`${WORKER_URL}/threads`);
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data.threads)) {
+                    const nextMap = {};
+                    data.threads.forEach(t => {
+                        const tid = t.thread_id || t.id;
+                        if (!tid) return;
+                        nextMap[tid] = {
+                            thread_id: tid,
+                            user_name: t.user_name || "Guest",
+                            country: t.country || "",
+                            phone: t.phone || "",
+                            priorities: t.priorities || [],
+                            messages: Array.isArray(t.messages) ? t.messages : []
+                        };
+                    });
+                    threadsMap = nextMap;
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(threadsMap));
+                } else if (Array.isArray(data.messages)) {
+                    groupFlatMessages(data.messages);
+                }
+                statusEl.innerText = "● Live Synced";
+            } else {
+                const fallbackRes = await fetch(`${WORKER_URL}/messages`);
+                if (fallbackRes.ok) {
+                    const fallbackData = await fallbackRes.json();
+                    if (Array.isArray(fallbackData.messages)) {
+                        groupFlatMessages(fallbackData.messages);
+                    }
+                }
+                statusEl.innerText = "● Live Synced";
             }
-        });
-    }
-
-    async function pollAll() {
-        await loadInbox();
-        if (activeThreadId) {
-            await loadThreadMessages(activeThreadId, false);
+        } catch (err) {
+            statusEl.innerText = "● Showing Cached Chats";
         }
+
+        const keys = Object.keys(threadsMap);
+        if (!activeThreadId && keys.length > 0) {
+            activeThreadId = keys[0];
+        }
+        renderThreadsList();
+        renderActiveThread();
     }
 
-    async function loadInbox() {
-        if (!adminPin) return;
-        const res = await fetch(`${WORKER_URL}/inbox`, {
-            headers: { "X-Admin-Pin": adminPin }
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        const threads = data.threads || [];
-        document.getElementById("threadCount").innerText = String(threads.length);
-
-        const totalUnread = threads.reduce((sum, t) => sum + (t.unread_for_leader || 0), 0);
-        document.title = totalUnread > 0 ? `(${totalUnread}) Supreme Leader Inbox` : "Supreme Leader Inbox";
-
-        if (totalUnread > lastTotalUnread) {
-            playChime();
-            if ("Notification" in window && Notification.permission === "granted") {
-                const newest = threads[0];
-                new Notification(`New message from ${newest ? newest.user_name : "User"}`, {
-                    body: newest ? newest.last_message : "You have a new message."
-                });
+    function groupFlatMessages(messages) {
+        const grouped = {};
+        messages.forEach(m => {
+            const tid = m.thread_id || "default_thread";
+            if (!grouped[tid]) {
+                grouped[tid] = {
+                    thread_id: tid,
+                    user_name: m.user_name || "Guest",
+                    country: m.country || "",
+                    phone: m.phone || "",
+                    priorities: m.priorities || [],
+                    messages: []
+                };
             }
-        }
-        lastTotalUnread = totalUnread;
+            if (m.user_name) grouped[tid].user_name = m.user_name;
+            if (m.country) grouped[tid].country = m.country;
+            if (m.phone) grouped[tid].phone = m.phone;
+            grouped[tid].messages.push(m);
+        });
+        threadsMap = grouped;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(threadsMap));
+    }
 
-        const listEl = document.getElementById("threadList");
-        if (threads.length === 0) {
-            listEl.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No messages yet.</p>`;
+    function renderThreadsList() {
+        const listEl = document.getElementById("threadsList");
+        const badgeEl = document.getElementById("threadCountBadge");
+        const threadArr = Object.values(threadsMap).sort((a, b) => {
+            const lastA = a.messages && a.messages.length ? (a.messages[a.messages.length - 1].timestamp || 0) : 0;
+            const lastB = b.messages && b.messages.length ? (b.messages[b.messages.length - 1].timestamp || 0) : 0;
+            return lastB - lastA;
+        });
+
+        badgeEl.innerText = String(threadArr.length);
+
+        if (threadArr.length === 0) {
+            listEl.innerHTML = `<div class="empty-state">No chats found yet.</div>`;
             return;
         }
 
-        listEl.innerHTML = threads.map(t => {
-            const isActive = t.thread_id === activeThreadId;
-            const unread = t.unread_for_leader || 0;
-            const prio = Array.isArray(t.priorities) && t.priorities.length ? ` • ${t.priorities.join(", ")}` : "";
+        listEl.innerHTML = threadArr.map(t => {
+            const lastMsg = t.messages && t.messages.length ? t.messages[t.messages.length - 1].text : "No messages";
+            const isActive = t.thread_id === activeThreadId ? "active" : "";
             return `
-                <div class="thread-item ${isActive ? "active" : ""}" onclick="selectThread('${escapeAttr(t.thread_id)}')">
-                    <div style="min-width:0;">
-                        <div class="thread-name">${escapeHtml(t.user_name || "Guest")}</div>
-                        <div class="thread-sub">${escapeHtml(t.country || "")} ${escapeHtml(t.phone || "")}${escapeHtml(prio)}</div>
-                        <div class="thread-preview">${escapeHtml(t.last_message || "")}</div>
-                    </div>
-                    ${unread > 0 ? `<span class="unread-pill">${unread}</span>` : ""}
+                <div class="thread-item ${isActive}" onclick="selectThread('${escapeAttr(t.thread_id)}')">
+                    <div class="thread-user">${escapeHtml(t.user_name || "Guest")}</div>
+                    <div class="thread-meta">${escapeHtml(t.country || "")} ${t.phone ? "• " + escapeHtml(t.phone) : ""}</div>
+                    <div class="thread-preview">${escapeHtml(lastMsg || "")}</div>
                 </div>
             `;
         }).join("");
     }
 
-    async function selectThread(threadId) {
-        activeThreadId = threadId;
-        await fetch(`${WORKER_URL}/read`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Admin-Pin": adminPin },
-            body: JSON.stringify({ thread_id: threadId })
-        });
-        await loadInbox();
-        await loadThreadMessages(threadId, true);
+    function selectThread(tid) {
+        activeThreadId = tid;
+        renderThreadsList();
+        renderActiveThread();
     }
 
-    async function loadThreadMessages(threadId, updateHeader) {
-        const res = await fetch(`${WORKER_URL}/messages?thread_id=${encodeURIComponent(threadId)}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        const msgs = data.messages || [];
+    function renderActiveThread() {
+        const titleEl = document.getElementById("selectedUserTitle");
+        const metaEl = document.getElementById("selectedThreadMeta");
+        const feedEl = document.getElementById("messagesFeed");
 
-        if (updateHeader && msgs.length > 0) {
-            const firstUser = msgs.find(m => m.sender === "user") || msgs[0];
-            document.getElementById("activeUserHeader").innerText =
-                `Chatting with: ${firstUser.user_name || "Guest"} (${firstUser.country || ""} ${firstUser.phone || ""})`;
+        const thread = activeThreadId ? threadsMap[activeThreadId] : null;
+        if (!thread) {
+            titleEl.innerText = "All Chats";
+            metaEl.innerText = "No active thread selected";
+            feedEl.innerHTML = `<div class="empty-state">No chat messages to display yet.</div>`;
+            return;
         }
 
-        const box = document.getElementById("messagesBox");
+        titleEl.innerText = thread.user_name || "Guest";
+        const prioText = Array.isArray(thread.priorities) && thread.priorities.length
+            ? " • Wants: " + thread.priorities.join(", ")
+            : "";
+        metaEl.innerText = `${thread.country || "Unknown"} ${thread.phone ? "• " + thread.phone : ""}${prioText} (${thread.thread_id})`;
+
+        const msgs = Array.isArray(thread.messages) ? thread.messages : [];
         if (msgs.length === 0) {
-            box.innerHTML = `<p style="font-size:13px; color:var(--text-muted); text-align:center; margin:auto;">No messages in this thread yet.</p>`;
+            feedEl.innerHTML = `<div class="empty-state">No messages in this thread yet.</div>`;
             return;
         }
 
-        box.innerHTML = msgs.map(m => {
+        feedEl.innerHTML = msgs.map(m => {
             const isLeader = m.sender === "leader";
-            const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
+            const timeStr = m.timestamp
+                ? new Date(m.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "";
             return `
-                <div class="bubble ${isLeader ? "leader" : "user"}">
+                <div class="msg-bubble ${isLeader ? "msg-leader" : "msg-user"}">
                     <div>${escapeHtml(m.text || "")}</div>
-                    <div class="meta">${isLeader ? "You (Supreme Leader)" : escapeHtml(m.user_name || "User")} ${time ? "• " + time : ""}</div>
+                    <div class="msg-time">${isLeader ? "Supreme Leader" : escapeHtml(thread.user_name || "User")} ${timeStr ? "• " + timeStr : ""}</div>
                 </div>
             `;
         }).join("");
-        box.scrollTop = box.scrollHeight;
+
+        feedEl.scrollTop = feedEl.scrollHeight;
     }
 
     async function sendReply() {
         const input = document.getElementById("replyInput");
-        const err = document.getElementById("replyError");
         const text = input.value.trim();
+        if (!text || !activeThreadId) return;
 
-        if (!activeThreadId) {
-            err.innerText = "Select a user thread first.";
-            err.style.display = "block";
-            return;
-        }
-        if (!text) return;
-        err.style.display = "none";
+        const payload = {
+            thread_id: activeThreadId,
+            sender: "leader",
+            text: text,
+            timestamp: Date.now()
+        };
 
-        const res = await fetch(`${WORKER_URL}/reply`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Admin-Pin": adminPin },
-            body: JSON.stringify({ thread_id: activeThreadId, text })
-        });
-        if (res.ok) {
-            input.value = "";
-            await loadThreadMessages(activeThreadId, false);
-            await loadInbox();
+        if (!threadsMap[activeThreadId]) {
+            threadsMap[activeThreadId] = { thread_id: activeThreadId, messages: [] };
         }
+        threadsMap[activeThreadId].messages.push(payload);
+        localStorage.setItem(CACHE_KEY, JSON.stringify(threadsMap));
+        renderActiveThread();
+        renderThreadsList();
+        input.value = "";
+
+        try {
+            await fetch(`${WORKER_URL}/send`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            await loadAllChats();
+        } catch (e) {}
     }
 
-    function escapeHtml(s) {
-        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
     }
-    function escapeAttr(s) {
-        return String(s).replace(/'/g, "\\'");
+
+    function escapeAttr(str) {
+        return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
     }
 </script>
+
 </body>
 </html>
