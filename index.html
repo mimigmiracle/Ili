@@ -25,7 +25,7 @@
         .app-container { width: 100%; max-width: 480px; height: 100%; height: 100dvh; background: var(--bg-deep); display: flex; flex-direction: column; position: relative; overflow: hidden; }
         @media (min-width: 500px) { .app-container { height: 90vh; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.8); } }
 
-        .screen { display: none; flex: 1; flex-direction: column; padding: 24px; overflow-y: auto; height: 100%; padding-bottom: 108px; }
+        .screen { display: none; flex: 1; flex-direction: column; padding: 24px; overflow-y: auto; height: 100%; padding-bottom: 36px; }
         .screen.active { display: flex; }
 
         .input-group { width: 100%; text-align: left; margin-bottom: 14px; }
@@ -146,6 +146,13 @@
         .bonus-card { background: linear-gradient(135deg, #10b98122, #05966944); border: 1px solid #10b98166; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 14px; }
         .bonus-amount { font-size: 22px; font-weight: 800; color: #10b981; margin: 4px 0 10px 0; }
 
+        .balance-top-mascot {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
         .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
         .balance-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
         .balance-amount { font-size: 30px; font-weight: 800; color: #ffffff; margin-bottom: 10px; }
@@ -161,137 +168,14 @@
 
         .info-card { background: var(--bg-card); border-radius: 14px; padding: 14px 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
 
-        /* Dashboard-Only Gmail Logo + Devil Mascot Above It + Label Below */
-        .floating-chat-anchor {
-            display: none;
-            position: absolute;
-            bottom: 14px;
-            right: 16px;
-            z-index: 90;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-        }
-        .floating-chat-anchor.visible-on-dashboard {
-            display: flex;
-        }
-        .floating-chat-btn {
-            pointer-events: auto;
-            position: relative;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid #93c5fd;
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            animation: logoBobUpDown 2.2s ease-in-out infinite;
-        }
-        .floating-chat-btn:active { transform: scale(0.94); }
-        @keyframes logoBobUpDown {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .gmail-sublabel {
-            pointer-events: auto;
-            margin-top: 4px;
-            text-align: center;
-            font-size: 11px;
-            line-height: 1.15;
-            font-weight: 600;
-            color: var(--text-main);
-            cursor: pointer;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
-        }
-
-        .logo-perch-slot {
-            width: 72px;
-            height: 50px;
-            margin-bottom: -8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            pointer-events: none;
-            z-index: 95;
-        }
-
-        /* Non-blocking Form Field Tracker Mascot */
-        .field-tracker-slot {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 58px;
-            height: 48px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            z-index: 85;
-            transition: transform 0.22s ease-out;
-        }
-        .field-tracker-slot.active-tracker {
-            display: flex;
-        }
-        .field-tracker-slot .devil-mascot {
-            width: 54px;
-            height: 44px;
-        }
-
-        /* Red Devil Mascot Animation & 4 Pose Variants */
+        /* Static Red Devil Mascot Above Balance */
         .devil-mascot {
             width: 66px;
             height: 52px;
             overflow: visible;
             display: block;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
-            animation: devilFloat 1.1s ease-in-out infinite;
         }
-        .devil-wing-left {
-            transform-box: fill-box;
-            transform-origin: right center;
-            animation: wingFlapLeft 1.1s ease-in-out infinite;
-        }
-        .devil-wing-right {
-            transform-box: fill-box;
-            transform-origin: left center;
-            animation: wingFlapRight 1.1s ease-in-out infinite;
-        }
-        .devil-foot-left {
-            transform-box: fill-box;
-            transform-origin: center top;
-            animation: footKickLeft 1.1s ease-in-out infinite;
-        }
-        .devil-foot-right {
-            transform-box: fill-box;
-            transform-origin: center top;
-            animation: footKickRight 1.1s ease-in-out infinite;
-        }
-
-        @keyframes devilFloat {
-            0%, 100% { transform: translateY(0px) scaleX(1.03) scaleY(0.97); }
-            50% { transform: translateY(-6px) scaleX(0.98) scaleY(1.02); }
-        }
-        @keyframes wingFlapLeft {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-14deg); }
-        }
-        @keyframes wingFlapRight {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(14deg); }
-        }
-        @keyframes footKickLeft {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(8deg); }
-        }
-        @keyframes footKickRight {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-10deg); }
-        }
-
         .devil-pose-layer { display: none; }
         .devil-mascot[data-pose="0"] .pose-0 { display: inline; }
         .devil-mascot[data-pose="1"] .pose-1 { display: inline; }
@@ -332,32 +216,6 @@
         }
         .clearance-copy strong {
             color: var(--text-main);
-        }
-
-        .email-address-box {
-            background: var(--bg-input);
-            border: 1px solid #2563eb44;
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin: 12px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        .copy-mini-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #f8fafc;
-            border-radius: 7px;
-            padding: 6px 10px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            flex-shrink: 0;
         }
     </style>
 </head>
@@ -482,13 +340,80 @@
             <div class="user-badge" id="dashUserBadge">ID: User</div>
         </div>
 
-        <div id="verificationNotice" class="verification-banner">Membership is still under verification pending final approval. Please contact the Supreme Leader to get your membership ID and complete your verification.</div>
+        <div id="verificationNotice" class="verification-banner">Membership is still under verification pending final approval. Please contact the person that gave you this link, that is your Supreme Leader, ask them for your Membership ID, and ask them to help you request for your Membership ID to complete your verification.</div>
 
         <!-- WELCOME BONUS CARD -->
         <div id="welcomeBonusBox" class="bonus-card">
             <div style="font-size: 13px; color: #10b981; font-weight: bold; text-transform: uppercase;">🎁 Welcome Bonus Unlocked</div>
             <div class="bonus-amount" id="bonusDisplay">$4,072.00</div>
             <button class="btn btn-success" style="margin-top:0;" onclick="claimWelcomeBonus()">Claim Bonus Now</button>
+        </div>
+
+        <!-- RED DEVIL MASCOT AT THE TOP OF THE BALANCE -->
+        <div class="balance-top-mascot">
+            <svg id="devilMascot" class="devil-mascot" data-pose="0" viewBox="0 0 80 62" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="40" cy="58" rx="13" ry="2.8" fill="#64748b" opacity="0.65"/>
+
+                <g class="devil-wing-left">
+                    <path d="M24 27 L12 14 L15 24 L9 24 L17 31 L13 35 L25 34 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2" stroke-linejoin="round"/>
+                    <path d="M21 28 L14 21" stroke="#7f1d1d" stroke-width="1.3"/>
+                </g>
+
+                <g class="devil-wing-right">
+                    <path d="M56 27 L68 14 L65 24 L71 24 L63 31 L67 35 L55 34 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2" stroke-linejoin="round"/>
+                    <path d="M59 28 L66 21" stroke="#7f1d1d" stroke-width="1.3"/>
+                </g>
+
+                <g class="devil-foot-left">
+                    <path d="M31 44 C27 49 29 54 34 54 C38 54 39 49 38 44 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2"/>
+                </g>
+
+                <path d="M24 31 C24 19 32 15 41 15 C51 15 58 21 58 32 C58 42 51 47 41 47 C31 47 24 41 24 31 Z" fill="#c81e1e" stroke="#090d16" stroke-width="2.3"/>
+                <path d="M47 17 C54 20 57 26 57 32 C57 40 51 45 43 46 C49 42 52 36 52 29 C52 23 50 19 47 17 Z" fill="#991b1b" opacity="0.55"/>
+
+                <path d="M31 16 C29 10 33 7 35 12 C36 14 35 16 34 17 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.1" stroke-linejoin="round"/>
+                <path d="M47 16 C49 10 45 7 43 12 C42 14 43 16 44 17 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.1" stroke-linejoin="round"/>
+
+                <g class="devil-foot-right">
+                    <ellipse cx="52" cy="40" rx="5.5" ry="6.8" transform="rotate(-18 52 40)" fill="#b91c1c" stroke="#090d16" stroke-width="2.2"/>
+                </g>
+
+                <g class="devil-pose-layer pose-0">
+                    <path d="M28 24 L37 27 L36 32 L28 30 Z" fill="#090d16"/>
+                    <circle cx="31.5" cy="28" r="1.4" fill="#ffffff"/>
+                    <path d="M51 24 L42 27 L43 32 L51 30 Z" fill="#090d16"/>
+                    <circle cx="45.5" cy="28" r="1.4" fill="#ffffff"/>
+                    <path d="M37 35 Q41 37.5 45 34.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round"/>
+                    <polygon points="43,35.5 44.5,35.2 44,37.8" fill="#ffffff" stroke="#090d16" stroke-width="0.9"/>
+                </g>
+
+                <g class="devil-pose-layer pose-1">
+                    <path d="M27 25 L37 26 L36 31 L28 30 Z" fill="#090d16"/>
+                    <path d="M30 27.5 Q32 25.8 34 27.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
+                    <path d="M52 25 L42 26 L43 31 L51 30 Z" fill="#090d16"/>
+                    <path d="M45 27.5 Q47 25.8 49 27.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
+                    <path d="M37 35 Q41 37.5 45 34.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round"/>
+                    <polygon points="43,35.5 44.5,35.2 44,37.8" fill="#ffffff" stroke="#090d16" stroke-width="0.9"/>
+                </g>
+
+                <g class="devil-pose-layer pose-2">
+                    <path d="M27 26 L37 27 L36 32 L28 31 Z" fill="#090d16"/>
+                    <path d="M30 28.5 Q32 26.8 34 28.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
+                    <path d="M52 26 L42 27 L43 32 L51 31 Z" fill="#090d16"/>
+                    <path d="M45 28.5 Q47 26.8 49 28.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
+                    <path d="M36 36.5 L38.5 34.5 L41 36.5 L43.5 34.5 L46 36.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon points="38.2,35.2 39.4,35.2 38.8,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
+                    <polygon points="42.6,35.2 43.8,35.2 43.2,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
+                </g>
+
+                <g class="devil-pose-layer pose-3">
+                    <path d="M32 32 C28 29 26 26 28.5 23.8 C30.3 22.3 32 24 32 25.2 C32 24 33.7 22.3 35.5 23.8 C38 26 36 29 32 32 Z" fill="#090d16"/>
+                    <path d="M47 32 C43 29 41 26 43.5 23.8 C45.3 22.3 47 24 47 25.2 C47 24 48.7 22.3 50.5 23.8 C53 26 51 29 47 32 Z" fill="#090d16"/>
+                    <path d="M36 36.5 L38.5 34.5 L41 36.5 L43.5 34.5 L46 36.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon points="38.2,35.2 39.4,35.2 38.8,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
+                    <polygon points="42.6,35.2 43.8,35.2 43.2,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
+                </g>
+            </svg>
         </div>
 
         <div class="balance-card">
@@ -513,105 +438,14 @@
         </div>
     </div>
 
-    <!-- NON-BLOCKING FORM FIELD TRACKER SLOT -->
-    <div id="fieldTrackerSlot" class="field-tracker-slot"></div>
-
-    <!-- DASHBOARD-ONLY GMAIL LOGO + RED DEVIL MASCOT ON TOP OF IT + LABEL BELOW -->
-    <div id="dashboardChatAnchor" class="floating-chat-anchor">
-        <div id="logoPerchSlot" class="logo-perch-slot"></div>
-        <button type="button" class="floating-chat-btn" onclick="openGmailOrChatModal()" aria-label="Contact Supreme leader">
-            <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 17.5v-11z" fill="#ffffff"/>
-                <path d="M2.5 7l9.5 6.8L21.5 7" fill="none" stroke="#ea4335" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 18V7.5l4 2.9V18H3z" fill="#4285f4"/>
-                <path d="M17 18v-7.6l4-2.9V18h-4z" fill="#34a853"/>
-                <path d="M2.5 7l9.5 6.8L21.5 7" fill="none" stroke="#ea4335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21.5 7L17 10.4V18h3.5a1.5 1.5 0 0 0 1.5-1.5V7z" fill="#fbbc05"/>
-            </svg>
-        </button>
-        <div class="gmail-sublabel" onclick="openGmailOrChatModal()">
-            <div>Contact</div>
-            <div>Supreme leader</div>
-        </div>
-    </div>
-
-    <!-- RED DEVIL MASCOT WITH 4 POSE STATES FROM REFERENCE IMAGE -->
-    <svg id="devilMascot" class="devil-mascot" data-pose="0" viewBox="0 0 80 62" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="40" cy="58" rx="13" ry="2.8" fill="#64748b" opacity="0.65"/>
-
-        <g class="devil-wing-left">
-            <path d="M24 27 L12 14 L15 24 L9 24 L17 31 L13 35 L25 34 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2" stroke-linejoin="round"/>
-            <path d="M21 28 L14 21" stroke="#7f1d1d" stroke-width="1.3"/>
-        </g>
-
-        <g class="devil-wing-right">
-            <path d="M56 27 L68 14 L65 24 L71 24 L63 31 L67 35 L55 34 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2" stroke-linejoin="round"/>
-            <path d="M59 28 L66 21" stroke="#7f1d1d" stroke-width="1.3"/>
-        </g>
-
-        <g class="devil-foot-left">
-            <path d="M31 44 C27 49 29 54 34 54 C38 54 39 49 38 44 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.2"/>
-        </g>
-
-        <path d="M24 31 C24 19 32 15 41 15 C51 15 58 21 58 32 C58 42 51 47 41 47 C31 47 24 41 24 31 Z" fill="#c81e1e" stroke="#090d16" stroke-width="2.3"/>
-        <path d="M47 17 C54 20 57 26 57 32 C57 40 51 45 43 46 C49 42 52 36 52 29 C52 23 50 19 47 17 Z" fill="#991b1b" opacity="0.55"/>
-
-        <path d="M31 16 C29 10 33 7 35 12 C36 14 35 16 34 17 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.1" stroke-linejoin="round"/>
-        <path d="M47 16 C49 10 45 7 43 12 C42 14 43 16 44 17 Z" fill="#b91c1c" stroke="#090d16" stroke-width="2.1" stroke-linejoin="round"/>
-
-        <g class="devil-foot-right">
-            <ellipse cx="52" cy="40" rx="5.5" ry="6.8" transform="rotate(-18 52 40)" fill="#b91c1c" stroke="#090d16" stroke-width="2.2"/>
-        </g>
-
-        <g class="devil-pose-layer pose-0">
-            <path d="M28 24 L37 27 L36 32 L28 30 Z" fill="#090d16"/>
-            <circle cx="31.5" cy="28" r="1.4" fill="#ffffff"/>
-            <path d="M51 24 L42 27 L43 32 L51 30 Z" fill="#090d16"/>
-            <circle cx="45.5" cy="28" r="1.4" fill="#ffffff"/>
-            <path d="M37 35 Q41 37.5 45 34.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round"/>
-            <polygon points="43,35.5 44.5,35.2 44,37.8" fill="#ffffff" stroke="#090d16" stroke-width="0.9"/>
-        </g>
-
-        <g class="devil-pose-layer pose-1">
-            <path d="M27 25 L37 26 L36 31 L28 30 Z" fill="#090d16"/>
-            <path d="M30 27.5 Q32 25.8 34 27.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M52 25 L42 26 L43 31 L51 30 Z" fill="#090d16"/>
-            <path d="M45 27.5 Q47 25.8 49 27.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M37 35 Q41 37.5 45 34.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round"/>
-            <polygon points="43,35.5 44.5,35.2 44,37.8" fill="#ffffff" stroke="#090d16" stroke-width="0.9"/>
-        </g>
-
-        <g class="devil-pose-layer pose-2">
-            <path d="M27 26 L37 27 L36 32 L28 31 Z" fill="#090d16"/>
-            <path d="M30 28.5 Q32 26.8 34 28.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M52 26 L42 27 L43 32 L51 31 Z" fill="#090d16"/>
-            <path d="M45 28.5 Q47 26.8 49 28.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M36 36.5 L38.5 34.5 L41 36.5 L43.5 34.5 L46 36.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <polygon points="38.2,35.2 39.4,35.2 38.8,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
-            <polygon points="42.6,35.2 43.8,35.2 43.2,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
-        </g>
-
-        <g class="devil-pose-layer pose-3">
-            <path d="M32 32 C28 29 26 26 28.5 23.8 C30.3 22.3 32 24 32 25.2 C32 24 33.7 22.3 35.5 23.8 C38 26 36 29 32 32 Z" fill="#090d16"/>
-            <path d="M47 32 C43 29 41 26 43.5 23.8 C45.3 22.3 47 24 47 25.2 C47 24 48.7 22.3 50.5 23.8 C53 26 51 29 47 32 Z" fill="#090d16"/>
-            <path d="M36 36.5 L38.5 34.5 L41 36.5 L43.5 34.5 L46 36.5" fill="none" stroke="#090d16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <polygon points="38.2,35.2 39.4,35.2 38.8,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
-            <polygon points="42.6,35.2 43.8,35.2 43.2,37.5" fill="#ffffff" stroke="#090d16" stroke-width="0.8"/>
-        </g>
-    </svg>
-
     <!-- ADMIN REQUIREMENTS NOTICE MODAL -->
     <div id="adminNoticeModal" class="id-modal">
         <div class="id-modal-content">
             <div style="font-size: 32px; margin-bottom: 6px;">ℹ️</div>
             <h3 style="font-size: 18px; margin-bottom: 6px;">Clearance Required</h3>
             <p class="clearance-copy">
-                To continue, you will need your <strong>Membership ID</strong> from the Supreme Leader. If you do not have your <strong>Membership ID</strong> yet, request it on Gmail or Google Chat first, or tap proceed if you already have it.
+                Contact the person that gave you this link, that is your Supreme Leader, ask them for your <strong>Membership ID</strong>, and ask them to help you request for your <strong>Membership ID</strong>. Tap proceed if you already have your <strong>Membership ID</strong>.
             </p>
-
-            <button class="btn btn-unified" style="margin-bottom: 8px;" onclick="closeAdminNoticeModal(); openGmailOrChatModal();">
-                ✉️ Request Membership ID
-            </button>
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-secondary" onclick="closeAdminNoticeModal()">Cancel</button>
@@ -626,7 +460,7 @@
             <div style="font-size: 32px; margin-bottom: 6px;">🔒</div>
             <h3 style="font-size: 18px; margin-bottom: 8px;">Security Verification</h3>
             <p class="clearance-copy">
-                Put in your <strong>Membership ID</strong> below to proceed.
+                Put in your <strong>Membership ID</strong> below to proceed. If you do not have it yet, contact the person that gave you this link, that is your Supreme Leader, and ask them to help you request for your <strong>Membership ID</strong>.
             </p>
 
             <div class="input-group">
@@ -640,36 +474,6 @@
                 <button class="btn btn-secondary" onclick="closeMembershipModal()">Cancel</button>
                 <button class="btn btn-unified" onclick="authorizeMembershipId()">Authorize</button>
             </div>
-        </div>
-    </div>
-
-    <!-- GMAIL & GOOGLE CHAT CONTACT MODAL -->
-    <div id="gmailChatModal" class="modal">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <div>
-                    <h3 style="font-size: 18px;">✉️ Contact via Gmail or Google Chat</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Request your Membership ID directly</p>
-                </div>
-                <button onclick="closeGmailOrChatModal()" style="background:none; border:none; color:var(--text-muted); font-size:24px; cursor:pointer;">×</button>
-            </div>
-
-            <div class="email-address-box">
-                <span id="contactEmailText">george43854@gmail.com</span>
-                <button type="button" class="copy-mini-btn" onclick="copyContactEmail()">Copy</button>
-            </div>
-
-            <a id="gmailMailtoLink" href="mailto:george43854@gmail.com" class="btn btn-unified" style="margin-bottom: 8px;">
-                📧 Send on Gmail
-            </a>
-
-            <a id="googleChatLink" href="https://chat.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-unified" style="margin-bottom: 8px;">
-                💬 Message on Google Chat
-            </a>
-
-            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.45; margin-top: 6px;">
-                Choose Send on Gmail for email or Message on Google Chat for chat to reach <strong>george43854@gmail.com</strong>.
-            </p>
         </div>
     </div>
 
@@ -731,14 +535,12 @@
 </div>
 
 <script>
-    const CONTACT_EMAIL = "george43854@gmail.com";
-
-    const STORAGE_KEY_STEP = "vault_registration_step_v17";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v17";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v17";
-    const STORAGE_KEY_TIME = "vault_last_time_v17";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v17";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v17";
+    const STORAGE_KEY_STEP = "vault_registration_step_v18";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v18";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v18";
+    const STORAGE_KEY_TIME = "vault_last_time_v18";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v18";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v18";
 
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
@@ -1048,21 +850,6 @@
         updatePhoneFieldForCountry(countryName, true);
     }
 
-    function syncDashboardChatVisibility(isDashboard) {
-        const anchor = document.getElementById('dashboardChatAnchor');
-        const mascot = document.getElementById('devilMascot');
-        const logoSlot = document.getElementById('logoPerchSlot');
-        const trackerSlot = document.getElementById('fieldTrackerSlot');
-
-        if (isDashboard) {
-            if (anchor) anchor.classList.add('visible-on-dashboard');
-            if (trackerSlot) trackerSlot.classList.remove('active-tracker');
-            if (mascot && logoSlot) logoSlot.appendChild(mascot);
-        } else {
-            if (anchor) anchor.classList.remove('visible-on-dashboard');
-        }
-    }
-
     function startFourPoseCycle() {
         const mascot = document.getElementById('devilMascot');
         if (mascot) mascot.setAttribute('data-pose', String(currentPoseIndex));
@@ -1072,57 +859,6 @@
             const el = document.getElementById('devilMascot');
             if (el) el.setAttribute('data-pose', String(currentPoseIndex));
         }, 1600);
-    }
-
-    function moveTrackerAboveElement(targetEl) {
-        const isDashboard = document.getElementById('dashScreen').classList.contains('active');
-        const trackerSlot = document.getElementById('fieldTrackerSlot');
-        const mascot = document.getElementById('devilMascot');
-        const container = document.getElementById('appContainer');
-
-        if (isDashboard || !targetEl || !trackerSlot || !mascot || !container) return;
-
-        const containerRect = container.getBoundingClientRect();
-        const targetRect = targetEl.getBoundingClientRect();
-
-        if (targetRect.width === 0 || targetRect.height === 0) return;
-
-        trackerSlot.appendChild(mascot);
-        trackerSlot.classList.add('active-tracker');
-
-        const slotWidth = trackerSlot.offsetWidth || 58;
-        const slotHeight = trackerSlot.offsetHeight || 48;
-
-        let x = (targetRect.right - containerRect.left) - slotWidth - 6;
-        let y = (targetRect.top - containerRect.top) - slotHeight + 4;
-
-        x = Math.max(8, Math.min(x, container.clientWidth - slotWidth - 8));
-        y = Math.max(4, Math.min(y, container.clientHeight - slotHeight - 8));
-
-        trackerSlot.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
-    }
-
-    function setupFormClickTracking() {
-        const appContainer = document.getElementById('appContainer');
-        if (!appContainer) return;
-
-        appContainer.addEventListener('pointerdown', (e) => {
-            const isDashboard = document.getElementById('dashScreen').classList.contains('active');
-            if (isDashboard) return;
-            const interactiveEl = e.target.closest('input, select, textarea, .gender-btn, .multi-option-btn, .upload-dropzone');
-            if (interactiveEl) {
-                moveTrackerAboveElement(interactiveEl);
-            }
-        }, true);
-
-        appContainer.addEventListener('focusin', (e) => {
-            const isDashboard = document.getElementById('dashScreen').classList.contains('active');
-            if (isDashboard) return;
-            const interactiveEl = e.target.closest('input, select, textarea');
-            if (interactiveEl) {
-                moveTrackerAboveElement(interactiveEl);
-            }
-        }, true);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1166,7 +902,6 @@
 
         calculateStoredBalance();
         updateCurrencyLabels();
-        setupFormClickTracking();
         restoreUserStep();
         startFourPoseCycle();
     });
@@ -1175,14 +910,11 @@
         localStorage.setItem(STORAGE_KEY_STEP, stepName);
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
-        const isDashboard = stepName === 'dashboard';
-        syncDashboardChatVisibility(isDashboard);
-
         if (stepName === 'registration') document.getElementById('screenRegistration').classList.add('active');
         if (stepName === 'service') document.getElementById('screenService').classList.add('active');
         if (stepName === 'rules') document.getElementById('screenRules').classList.add('active');
         if (stepName === 'upload') document.getElementById('screenUpload').classList.add('active');
-        if (isDashboard) {
+        if (stepName === 'dashboard') {
             document.getElementById('dashScreen').classList.add('active');
             const savedName = localStorage.getItem('user_profile_name') || 'User';
             document.getElementById('dashUserBadge').innerText = "ID: " + savedName;
@@ -1420,32 +1152,6 @@
         document.getElementById('balanceDisplay').innerText = formatInCountryCurrency(currentBalanceNgn, countryName);
         successBox.style.display = 'block';
         setTimeout(() => { closeWithdrawModal(); }, 3000);
-    }
-
-    // Gmail & Google Chat Contact Helpers
-    function openGmailOrChatModal() {
-        const userName = localStorage.getItem('user_profile_name') || 'Member';
-        const country = localStorage.getItem(STORAGE_KEY_COUNTRY) || '';
-        const subject = encodeURIComponent(`Membership ID Request - ${userName}`);
-        const body = encodeURIComponent(`Hello Supreme Leader, my name is ${userName}${country ? ' (' + country + ')' : ''}. I am requesting my Membership ID.`);
-
-        document.getElementById('gmailMailtoLink').href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-        document.getElementById('googleChatLink').href = `https://chat.google.com/`;
-        document.getElementById('gmailChatModal').classList.add('active');
-    }
-
-    function closeGmailOrChatModal() {
-        document.getElementById('gmailChatModal').classList.remove('active');
-    }
-
-    function copyContactEmail() {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(CONTACT_EMAIL).catch(() => {});
-        }
-        const btn = event.target;
-        const prev = btn.innerText;
-        btn.innerText = "Copied";
-        setTimeout(() => { btn.innerText = prev; }, 1500);
     }
 </script>
 
