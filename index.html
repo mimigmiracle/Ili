@@ -147,10 +147,14 @@
         .bonus-amount { font-size: 22px; font-weight: 800; color: #10b981; margin: 4px 0 10px 0; }
 
         .balance-top-mascot {
+            position: relative;
+            width: 100%;
+            height: 58px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 6px;
+            overflow: visible;
         }
 
         .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
@@ -168,13 +172,37 @@
 
         .info-card { background: var(--bg-card); border-radius: 14px; padding: 14px 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
 
-        /* Static Red Devil Mascot Above Balance */
+        /* Center-to-Sides Left/Right & Up/Down Float Above Balance */
         .devil-mascot {
             width: 66px;
             height: 52px;
             overflow: visible;
             display: block;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+            animation: devilBalanceSweep 4.8s ease-in-out infinite;
+        }
+        @keyframes devilBalanceSweep {
+            0% {
+                transform: translate3d(0px, 0px, 0) scale(1);
+            }
+            18% {
+                transform: translate3d(-58px, -7px, 0) scale(0.96);
+            }
+            30% {
+                transform: translate3d(-96px, 4px, 0) scale(1.04);
+            }
+            50% {
+                transform: translate3d(0px, -6px, 0) scale(1.02);
+            }
+            68% {
+                transform: translate3d(58px, 5px, 0) scale(0.96);
+            }
+            82% {
+                transform: translate3d(96px, -7px, 0) scale(1.04);
+            }
+            100% {
+                transform: translate3d(0px, 0px, 0) scale(1);
+            }
         }
         .devil-pose-layer { display: none; }
         .devil-mascot[data-pose="0"] .pose-0 { display: inline; }
@@ -460,7 +488,7 @@
             <div style="font-size: 32px; margin-bottom: 6px;">🔒</div>
             <h3 style="font-size: 18px; margin-bottom: 8px;">Security Verification</h3>
             <p class="clearance-copy">
-                Put in your <strong>Membership ID</strong> below to proceed. If you do not have it yet, contact the person that gave you this link, that is your Supreme Leader, and ask them to help you request for your <strong>Membership ID</strong>.
+                Put in your <strong>Membership ID</strong> below to proceed.
             </p>
 
             <div class="input-group">
@@ -535,12 +563,12 @@
 </div>
 
 <script>
-    const STORAGE_KEY_STEP = "vault_registration_step_v18";
-    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v18";
-    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v18";
-    const STORAGE_KEY_TIME = "vault_last_time_v18";
-    const STORAGE_KEY_COUNTRY = "vault_selected_country_v18";
-    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v18";
+    const STORAGE_KEY_STEP = "vault_registration_step_v19";
+    const STORAGE_KEY_BONUS_CLAIMED = "vault_bonus_claimed_v19";
+    const STORAGE_KEY_BALANCE_NGN = "vault_balance_ngn_v19";
+    const STORAGE_KEY_TIME = "vault_last_time_v19";
+    const STORAGE_KEY_COUNTRY = "vault_selected_country_v19";
+    const STORAGE_KEY_PRIORITIES = "vault_selected_priorities_v19";
 
     const NGN_PER_USD = 1650;
     const INCREMENT_PER_SEC_NGN = 6.633;
