@@ -25,7 +25,7 @@
         .app-container { width: 100%; max-width: 480px; height: 100%; height: 100dvh; background: var(--bg-deep); display: flex; flex-direction: column; position: relative; overflow: hidden; }
         @media (min-width: 500px) { .app-container { height: 90vh; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.8); } }
 
-        .screen { display: none; flex: 1; flex-direction: column; padding: 24px; overflow-y: auto; height: 100%; padding-bottom: 96px; }
+        .screen { display: none; flex: 1; flex-direction: column; padding: 24px; overflow-y: auto; height: 100%; padding-bottom: 108px; }
         .screen.active { display: flex; }
 
         .input-group { width: 100%; text-align: left; margin-bottom: 14px; }
@@ -140,33 +140,33 @@
         #imagePreview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px auto; display: none; border: 2px solid var(--accent-blue); }
 
         /* Dashboard Screen */
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .user-badge { font-size: 14px; background: #1e293b; padding: 6px 12px; border-radius: 20px; color: var(--text-muted); border: 1px solid #334155; }
         
-        .bonus-card { background: linear-gradient(135deg, #10b98122, #05966944); border: 1px solid #10b98166; border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 16px; }
-        .bonus-amount { font-size: 24px; font-weight: 800; color: #10b981; margin: 6px 0 10px 0; }
+        .bonus-card { background: linear-gradient(135deg, #10b98122, #05966944); border: 1px solid #10b98166; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 14px; }
+        .bonus-amount { font-size: 22px; font-weight: 800; color: #10b981; margin: 4px 0 10px 0; }
 
-        .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
-        .balance-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .balance-amount { font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 12px; }
+        .balance-card { background: linear-gradient(145deg, #0f1c3f, #13265c); border: 1px solid #2563eb44; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        .balance-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .balance-amount { font-size: 30px; font-weight: 800; color: #ffffff; margin-bottom: 10px; }
         .live-ticker { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); color: var(--success); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.3); }
         .pulsing-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
 
-        .actions-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
-        .action-tile { background: var(--bg-card); border: 1px solid #1e293b; border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; transition: border 0.2s; }
+        .actions-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+        .action-tile { background: var(--bg-card); border: 1px solid #1e293b; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; transition: border 0.2s; }
         .action-tile:hover { border-color: var(--accent-blue); }
-        .action-tile span { display: block; font-size: 24px; margin-bottom: 6px; }
-        .action-tile p { font-size: 15px; font-weight: bold; }
+        .action-tile span { display: block; font-size: 22px; margin-bottom: 4px; }
+        .action-tile p { font-size: 14px; font-weight: bold; }
 
-        .info-card { background: var(--bg-card); border-radius: 14px; padding: 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
+        .info-card { background: var(--bg-card); border-radius: 14px; padding: 14px 16px; border: 1px solid #1e293b; margin-top: auto; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
 
-        /* Dashboard-Only Gmail Logo + Devil Mascot Above It */
+        /* Dashboard-Only Gmail Logo + Devil Mascot Above It + Label Below */
         .floating-chat-anchor {
             display: none;
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 14px;
+            right: 16px;
             z-index: 90;
             flex-direction: column;
             align-items: center;
@@ -178,8 +178,8 @@
         .floating-chat-btn {
             pointer-events: auto;
             position: relative;
-            width: 62px;
-            height: 62px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             background: #ffffff;
             border: 2px solid #93c5fd;
@@ -193,12 +193,24 @@
         .floating-chat-btn:active { transform: scale(0.94); }
         @keyframes logoBobUpDown {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-7px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .gmail-sublabel {
+            pointer-events: auto;
+            margin-top: 4px;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.15;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
         }
 
         .logo-perch-slot {
-            width: 78px;
-            height: 58px;
+            width: 72px;
+            height: 50px;
             margin-bottom: -8px;
             display: flex;
             align-items: flex-end;
@@ -231,8 +243,8 @@
 
         /* Red Devil Mascot Animation & 4 Pose Variants */
         .devil-mascot {
-            width: 72px;
-            height: 58px;
+            width: 66px;
+            height: 52px;
             overflow: visible;
             display: block;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
@@ -296,7 +308,18 @@
         .id-modal.active { display: flex; }
         .id-modal-content { width: 100%; max-width: 380px; background: var(--bg-card); border: 1px solid #2563eb55; border-radius: 20px; padding: 24px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
 
-        .verification-banner { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; color: #eab308; padding: 14px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 13px; line-height: 1.45; }
+        .verification-banner {
+            background: rgba(234, 179, 8, 0.14);
+            border: 1px solid #eab308;
+            color: #eab308;
+            padding: 9px 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 14px;
+            font-weight: 600;
+            font-size: 11px;
+            line-height: 1.35;
+        }
         .error-text { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
         .success-banner { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: var(--success); padding: 14px; border-radius: 10px; text-align: center; margin-bottom: 15px; display: none; font-size: 14px; font-weight: bold; }
 
@@ -459,7 +482,7 @@
             <div class="user-badge" id="dashUserBadge">ID: User</div>
         </div>
 
-        <div id="verificationNotice" class="verification-banner">Please contact the supreme leader to get your membership ID and complete your membership verification.</div>
+        <div id="verificationNotice" class="verification-banner">Membership is still under verification pending final approval. Please contact the Supreme Leader to get your membership ID and complete your verification.</div>
 
         <!-- WELCOME BONUS CARD -->
         <div id="welcomeBonusBox" class="bonus-card">
@@ -493,11 +516,11 @@
     <!-- NON-BLOCKING FORM FIELD TRACKER SLOT -->
     <div id="fieldTrackerSlot" class="field-tracker-slot"></div>
 
-    <!-- DASHBOARD-ONLY GMAIL LOGO + RED DEVIL MASCOT ON TOP OF IT -->
+    <!-- DASHBOARD-ONLY GMAIL LOGO + RED DEVIL MASCOT ON TOP OF IT + LABEL BELOW -->
     <div id="dashboardChatAnchor" class="floating-chat-anchor">
         <div id="logoPerchSlot" class="logo-perch-slot"></div>
-        <button type="button" class="floating-chat-btn" onclick="openGmailOrChatModal()" aria-label="Contact via Gmail or Google Chat">
-            <svg width="34" height="34" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <button type="button" class="floating-chat-btn" onclick="openGmailOrChatModal()" aria-label="Contact Supreme leader">
+            <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 17.5v-11z" fill="#ffffff"/>
                 <path d="M2.5 7l9.5 6.8L21.5 7" fill="none" stroke="#ea4335" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M3 18V7.5l4 2.9V18H3z" fill="#4285f4"/>
@@ -506,6 +529,10 @@
                 <path d="M21.5 7L17 10.4V18h3.5a1.5 1.5 0 0 0 1.5-1.5V7z" fill="#fbbc05"/>
             </svg>
         </button>
+        <div class="gmail-sublabel" onclick="openGmailOrChatModal()">
+            <div>Contact</div>
+            <div>Supreme leader</div>
+        </div>
     </div>
 
     <!-- RED DEVIL MASCOT WITH 4 POSE STATES FROM REFERENCE IMAGE -->
@@ -599,7 +626,7 @@
             <div style="font-size: 32px; margin-bottom: 6px;">🔒</div>
             <h3 style="font-size: 18px; margin-bottom: 8px;">Security Verification</h3>
             <p class="clearance-copy">
-                Enter your <strong>Membership ID</strong> below to authorize withdrawal access, or contact the Supreme Leader on Gmail or Google Chat to request your <strong>Membership ID</strong>.
+                Put in your <strong>Membership ID</strong> below to proceed.
             </p>
 
             <div class="input-group">
@@ -608,10 +635,6 @@
             </div>
 
             <p id="membershipError" class="error-text" style="margin-bottom: 12px;"></p>
-
-            <button class="btn btn-unified" style="margin-bottom: 8px;" onclick="closeMembershipModal(); openGmailOrChatModal();">
-                ✉️ Request Membership ID
-            </button>
 
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-secondary" onclick="closeMembershipModal()">Cancel</button>
